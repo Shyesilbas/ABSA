@@ -83,4 +83,4 @@ if __name__ == "__main__":
         aspect = input("Enter the aspect: ")
 
         sentiment = predict_sentiment(model, tokenizer, device, sentence, aspect)
-        print(f"🧠 Model Says: {sentiment}")
+        print(f" Model Says: {sentiment}")

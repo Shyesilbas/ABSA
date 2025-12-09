@@ -7,9 +7,7 @@ import os
 
 class ABSADataset(Dataset):
     def __init__(self, data_path, tokenizer, max_len=128):
-        """
-        Bu sınıf, CSV dosyasını alır ve BERT'in anlayacağı formata (Tensor) çevirir.
-        """
+
         self.df = pd.read_csv(data_path)
         self.tokenizer = tokenizer
         self.max_len = max_len
@@ -26,8 +24,7 @@ class ABSADataset(Dataset):
         aspect = str(self.aspects[item])
         label = self.labels[item]
 
-        # BERT Tokenizer'a iki metni (Cümle + Aspect) aynı anda veriyoruz.
-        # BERT bunları otomatik olarak [SEP] ile ayırır.
+
         encoding = self.tokenizer.encode_plus(
             review,
             aspect,
@@ -62,7 +59,7 @@ if __name__ == "__main__":
 
     print("-" * 30)
     print("Sample Sentence:", sample['review_text'])
-    print("Tokenize edition (Input IDs):", sample['input_ids'][:20])  # İlk 20 sayı
+    print("Tokenize edition (Input IDs):", sample['input_ids'][:20])
     print("Target Label:", sample['targets'])
     print("-" * 30)
     print("Test Successful! Data is suitable for BERT format.")
