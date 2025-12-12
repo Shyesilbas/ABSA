@@ -2,15 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+from config import FINAL_REPORT_PATH, DATA_DIR
 
-base_dir = os.path.dirname(os.path.dirname(__file__))
-csv_path = os.path.join(base_dir, 'data', 'final_report.csv')
-
-if not os.path.exists(csv_path):
+if not os.path.exists(FINAL_REPORT_PATH):
     print("CSV file not found")
     exit()
 
-df = pd.read_csv(csv_path)
+df = pd.read_csv(FINAL_REPORT_PATH)
 
 df.rename(columns={'conf': 'confidence_score', 'aspect': 'detected_aspect'}, inplace=True)
 df.columns = df.columns.str.strip()
@@ -52,7 +50,7 @@ try:
             ax.annotate(f'{height}', (p.get_x() + p.get_width() / 2., p.get_height()),
                         ha='center', va='center', fontsize=12, color='black', xytext=(0, 5), textcoords='offset points')
 
-    save_path1 = os.path.join(base_dir, 'data', 'chart_sentiment_distribution.png')
+    save_path1 = os.path.join(DATA_DIR, 'chart_sentiment_distribution.png')
     plt.savefig(save_path1, dpi=300)
     print(f"\nGraph 1 saved to: {save_path1}")
 
@@ -82,7 +80,7 @@ try:
     plt.ylabel('Aspect', fontsize=12)
     plt.legend(title='Sentiment State')
 
-    save_path2 = os.path.join(base_dir, 'data', 'chart_top_aspects.png')
+    save_path2 = os.path.join(DATA_DIR, 'chart_top_aspects.png')
     plt.savefig(save_path2, dpi=300)
     print(f"Graph 2 saved to: {save_path2}")
 

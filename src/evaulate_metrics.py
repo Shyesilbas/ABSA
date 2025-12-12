@@ -1,15 +1,11 @@
 import torch
 from transformers import BertTokenizer
-import pandas as pd
 import os
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
-from auto_predict import SentimentClassifier
-
-MODEL_NAME = 'dbmdz/bert-base-turkish-cased'
-MAX_LEN = 128
-class_names = ['Negative', 'Neutral', 'Positive']
+from model_utils import SentimentClassifier
+from config import MODEL_NAME, MAX_LEN, CLASS_NAMES, MODEL_PATH, TEST_DATA_PATH
 
 def get_predictions(model, data_loader, device):
 
@@ -57,21 +53,18 @@ if __name__ == "__main__":
     from torch.utils.data import DataLoader
 
     device = torch.device("cpu")
-    base_path = os.path.dirname(os.path.dirname(__file__))
-    model_path = os.path.join(base_path, 'models', 'best_model_state.bin')
-    data_path = os.path.join(base_path, 'data', 'test.csv')
-
+    
     print("Loading model and test data...")
-    model = SentimentClassifier(n_classes=3)
+    model = SentimentClassifier(n_classes=len(CLASS_NAMES))
 
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model file not found at {model_path}")
+    if not os.path.exists(MODEL_PATH):
+        raise FileNotFoundError(f"Model file not found at {MODEL_PATH}")
 
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.to(device)
 
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
-    test_dataset = ABSADataset(data_path, tokenizer, MAX_LEN)
+    test_dataset = ABSADataset(TEST_DATA_PATH, tokenizer, MAX_LEN)
     test_data_loader = DataLoader(test_dataset, batch_size=16)
 
     print("Analyzing test set. May take a while")
@@ -85,7 +78,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     print("CLASSIFICATION REPORT")
     print("=" * 60)
-    print(classification_report(y_test, y_pred, target_names=class_names))
+    print(classification_report(y_test, y_pred, target_names=CLASS_NAMES))
 
     print("Generating Confusion Matrix plot...")
     cm = confusion_matrix(y_test, y_pred)

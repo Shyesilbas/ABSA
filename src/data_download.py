@@ -1,6 +1,6 @@
 import pandas as pd
 from datasets import load_dataset
-import os
+from config import RAW_DATA_PATH
 
 def download_and_save_data():
     print("Dataset is downloading...")
@@ -20,10 +20,8 @@ def download_and_save_data():
         print("Labels:")
         print(df_train['label'].value_counts())
 
-    output_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'turkish_absa_train.csv')
-
-    df_train.to_csv(output_path, index=False)
-    print(f"\nSuccessful! Data saved to: {output_path}")
+    df_train.to_csv(RAW_DATA_PATH, index=False)
+    print(f"\nSuccessful! Data saved to: {RAW_DATA_PATH}")
 
 if __name__ == "__main__":
     download_and_save_data()

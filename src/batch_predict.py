@@ -1,41 +1,8 @@
 import pandas as pd
-import torch
-from transformers import BertTokenizer
-import spacy
 import os
 from tqdm import tqdm
-from config import MODEL_NAME, MAX_LEN, CLASS_NAMES
-from auto_predict import SentimentClassifier, extract_aspects, predict_sentiment
-
-def load_resources_for_batch():
-    print("Loading resources...")
-
-    device = torch.device("cpu")
-    model = SentimentClassifier(n_classes=3)
-
-    base_path = os.path.dirname(os.path.dirname(__file__))
-    model_path = os.path.join(base_path, 'models', 'best_model_state.bin')
-
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model folder not found at PATH : {model_path}")
-
-    model.load_state_dict(torch.load(model_path, map_location=device))
-    model.to(device)
-    model.eval()
-
-    tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
-
-    try:
-        nlp = spacy.load("tr_core_news_md")
-    except:
-        try:
-            nlp = spacy.load("tr_core_news_tr")
-        except:
-            print("SpaCy model not found! Please install 'tr_core_news_tr'.")
-            exit()
-
-    print("All resources ready!")
-    return model, tokenizer, nlp, device
+from config import SAMPLE_TWEETS_PATH, FINAL_REPORT_PATH
+from model_utils import load_model_resources, extract_aspects, predict_sentiment_single
 
 def read_file_smart(filepath):
     try:
@@ -56,7 +23,7 @@ def read_file_smart(filepath):
         return None
 
 def process_batch(input_file, output_file):
-    model, tokenizer, nlp, device = load_resources_for_batch()
+    model, tokenizer, nlp, device = load_model_resources()
 
     if not os.path.exists(input_file):
         print(f"Input file not found : {input_file}")
@@ -100,7 +67,7 @@ def process_batch(input_file, output_file):
             continue
 
         for aspect in aspects:
-            sentiment, conf = predict_sentiment(model, tokenizer, device, str(text), aspect)
+            sentiment, conf = predict_sentiment_single(model, tokenizer, device, str(text), aspect)
 
             results.append({
                 'id': tweet_id,
@@ -118,8 +85,4 @@ def process_batch(input_file, output_file):
     print(f"Report saved to: {output_file}")
 
 if __name__ == "__main__":
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-    input_csv = os.path.join(base_dir, 'data', 'sample_tweets.csv')
-    output_csv = os.path.join(base_dir, 'data', 'final_report.csv')
-
-    process_batch(input_csv, output_csv)
+    process_batch(SAMPLE_TWEETS_PATH, FINAL_REPORT_PATH)

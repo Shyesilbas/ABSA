@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
 import pandas as pd
-import os
+from config import TRAIN_DATA_PATH, MODEL_NAME
 
 class ABSADataset(Dataset):
     def __init__(self, data_path, tokenizer, max_len=128):
@@ -43,13 +43,9 @@ class ABSADataset(Dataset):
         }
 
 if __name__ == "__main__":
-    MODEL_NAME = 'dbmdz/bert-base-turkish-cased'
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 
-    base_path = os.path.dirname(os.path.dirname(__file__))
-    train_path = os.path.join(base_path, 'data', 'train.csv')
-
-    dataset = ABSADataset(train_path, tokenizer)
+    dataset = ABSADataset(TRAIN_DATA_PATH, tokenizer)
 
     sample = dataset[0]
 
