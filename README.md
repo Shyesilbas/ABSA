@@ -47,19 +47,21 @@ pip install https://huggingface.co/turkish-nlp-suite/tr_core_news_md/resolve/mai
 
 Sistemi uçtan uca çalıştırmak için `src/` klasöründeki dosyaları aşağıdaki sırayla çalıştırın.
 
-### Adım 1: Veriyi İndirme 📥
+### Adım 1: Veriyi İndirme 
 HuggingFace üzerinden ham veri setini indirmek için:
 *   Çalıştır: **`src/data_download.py`**
 *   *Sonuç:* `data/turkish_absa_train.csv` dosyası oluşur.
 
-### Adım 2: Veriyi İşleme ve Bölme 🧹
+### Adım 2: Veriyi İşleme ve Bölme 
 Veriyi temizlemek ve Eğitim/Test olarak ayırmak için:
 *   Çalıştır: **`src/data_preprocessing.py`**
 *   *Sonuç:* `data/` klasöründe `train.csv`, `val.csv` ve `test.csv` dosyaları oluşur.
 
-### Adım 3: Model Kontrolü 🤖
-`models/best_model_state.bin` dosyasının yerinde olduğundan emin olun.
-*(Not: Model eğitimi yüksek donanım gerektirdiği için Google Colab üzerinde yapılmıştır, scripti bu projede yok.)*
+### Adım 3: Model Eğitimi ️ (Opsiyonel)
+Sıfırdan model eğitmek veya mevcut modeli tazelemek isterseniz:
+*   Çalıştır: **`src/train.py`**
+*   *Ne yapar?* `train.csv` verisiyle BERT modelini eğitir ve en iyi sonucu `models/best_model_state.bin` olarak kaydeder.
+*(Not: Eğitim işlemi CPU üzerinde çok yavaş olabilir. Mümkünse GPU kullanılması önerilir.)*
 
 ### Adım 4: Tahmin ve Analiz (Prediction) 🔮
 
@@ -79,7 +81,7 @@ Modelin doğruluk oranını (Accuracy), F1-Score ve Confusion Matrix değerlerin
 *   Çalıştır: **`src/evaulate_metrics.py`**
     *   *Ne yapar?* Test veri setini (`test.csv`) kullanarak modelin başarısını sayısal olarak ölçer ve raporlar.
 
-### Adım 6: Sonuçları Görselleştirme 📊
+### Adım 6: Sonuçları Görselleştirme 
 Çıkan analiz sonuçlarını (final_report.csv) grafiğe dökmek için:
 *   Çalıştır: **`src/visualize_results.py`**
 *   *Sonuç:* `data/` klasörüne `.png` formatında grafikler kaydedilir.
@@ -92,12 +94,12 @@ Geliştirme sürecini baştan sona test etmek istiyorsanız, dosyaları şu sır
 
 1.  **`src/data_download.py`** ➔ Veriyi indirir.
 2.  **`src/data_preprocessing.py`** ➔ Veriyi temizler ve böler.
-3.  *(Model dosyasının "`best_model_state.bin`" `models/` içinde olduğundan emin olun)*
-4.  **`src/auto_predict.py`** ➔ elle girilen cümle için tahmin yapar).
-5. **`src/predict.py`** ➔ elle girilen cümle için tahmin yapar. Aspect girmeniz de beklenir.).
-6. **`src/batch_predict.py`** ➔ toplu veri seti tahmini yapar. final_report.csv oluşur. İşlemi colab üzerinden yapmanız tavsiye edilir).
-7. **`src/evaluate_metrics.py`** ➔ Başarı oranını ölçer.
-8. **`src/visualize_results.py`** ➔ Oluşan final_report.csv için Grafikleri çizer.
+3.  **`src/train.py`** ➔ Modeli eğitir (Opsiyonel).
+4.  **`src/auto_predict.py`** ➔ Otomatik tahmin yapar.
+5.  **`src/predict.py`** ➔ Manuel tahmin yapar.
+6.  **`src/batch_predict.py`** ➔ Toplu analiz yapar.
+7.  **`src/evaluate_metrics.py`** ➔ Başarı ölçümü yapar.
+8.  **`src/visualize_results.py`** ➔ Sonuçları grafikleştirir.
 
 ---
 
@@ -111,5 +113,3 @@ Geliştirme sürecini baştan sona test etmek istiyorsanız, dosyaları şu sır
 *   **Çözüm:** Yukarıdaki "3. Türkçe Dil Modelini İndirin" başlığındaki komutları deneyin.
 
 ---
-
-
