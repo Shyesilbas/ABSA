@@ -2,7 +2,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 import os
 
-
 def process_data():
     base_path = os.path.dirname(os.path.dirname(__file__))
     input_path = os.path.join(base_path, 'data', 'turkish_absa_train.csv')
@@ -13,7 +12,6 @@ def process_data():
     df = df.dropna()
 
     print("Label distribution:\n", df['Polarity'].value_counts())
-
 
     train_df, temp_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df['Polarity'])
 
@@ -30,7 +28,6 @@ def process_data():
     test_df.to_csv(os.path.join(data_dir, 'test.csv'), index=False)
 
     print(f"Folders saved to the '{data_dir}' .")
-
 
 if __name__ == "__main__":
     process_data()

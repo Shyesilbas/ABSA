@@ -25,6 +25,5 @@ def download_and_save_data():
     df_train.to_csv(output_path, index=False)
     print(f"\nSuccessful! Data saved to: {output_path}")
 
-
 if __name__ == "__main__":
     download_and_save_data()

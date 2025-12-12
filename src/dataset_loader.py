@@ -4,7 +4,6 @@ from transformers import BertTokenizer
 import pandas as pd
 import os
 
-
 class ABSADataset(Dataset):
     def __init__(self, data_path, tokenizer, max_len=128):
 
@@ -24,7 +23,6 @@ class ABSADataset(Dataset):
         aspect = str(self.aspects[item])
         label = self.labels[item]
 
-
         encoding = self.tokenizer.encode_plus(
             review,
             aspect,
@@ -43,8 +41,6 @@ class ABSADataset(Dataset):
             'attention_mask': encoding['attention_mask'].flatten(),
             'targets': torch.tensor(label, dtype=torch.long)
         }
-
-
 
 if __name__ == "__main__":
     MODEL_NAME = 'dbmdz/bert-base-turkish-cased'

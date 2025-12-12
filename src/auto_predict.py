@@ -5,16 +5,12 @@ import spacy
 import os
 import warnings
 
-# Uyarıları gizle
 warnings.filterwarnings("ignore")
 
-# --- CONFIGURATION ---
 MODEL_NAME = 'dbmdz/bert-base-turkish-cased'
 MAX_LEN = 128
-CLASS_NAMES = ['Negative 😡', 'Neutral 😐', 'Positive 😃']
+CLASS_NAMES = ['Negative', 'Neutral', 'Positive']
 
-
-# --- 1. MODEL ARCHITECTURE ---
 class SentimentClassifier(nn.Module):
     def __init__(self, n_classes):
         super(SentimentClassifier, self).__init__()
@@ -28,16 +24,12 @@ class SentimentClassifier(nn.Module):
         output = self.drop(pooled_output)
         return self.out(output)
 
-
-# --- 2. LOADERS ---
 def load_resources():
-    print("⏳ Loading AI Models (BERT + spaCy)... Please wait.")
+    print("Loading models...")
 
-    # A. Load Sentiment Model (BERT)
     device = torch.device("cpu")
     model = SentimentClassifier(n_classes=3)
 
-    # Path handling
     base_path = os.path.dirname(os.path.dirname(__file__))
     model_path = os.path.join(base_path, 'models', 'best_model_state.bin')
 
@@ -50,21 +42,18 @@ def load_resources():
 
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 
-    # B. Load Aspect Extractor (spaCy - Turkish)
     try:
-        nlp = spacy.load("tr_core_news_md")  # Medium (Daha zeki)
+        nlp = spacy.load("tr_core_news_md")
     except OSError:
         try:
-            nlp = spacy.load("tr_core_news_tr")  # Small (Yedek)
+            nlp = spacy.load("tr_core_news_tr")
         except OSError:
-            print("❌ ERROR: Turkish spaCy model not found.")
+            print("Turkish spaCy model not found.")
             exit()
 
-    print("✅ All systems ready!")
+    print("System ready.")
     return model, tokenizer, nlp, device
 
-
-# --- 3. IMPROVED ASPECT EXTRACTOR (STRICT FILTER) ---
 def extract_aspects(nlp, text):
     doc = nlp(str(text))
     aspects = []
@@ -82,36 +71,29 @@ def extract_aspects(nlp, text):
     }
 
     for token in doc:
-        # 1. Kelimenin kökünü (lemma) ve küçük halini al
         lemma = token.lemma_.lower()
         text_lower = token.text.lower()
 
-        # 2. Kural: Sadece İSİM (NOUN) veya ÖZEL İSİM (PROPN) olsun
         if token.pos_ not in ["NOUN", "PROPN"]:
             continue
 
         if token.is_stop or token.is_punct:
             continue
 
-
         if lemma in blacklist or text_lower in blacklist:
             continue
 
-        # 5. Kural: Çok kısa kelimeleri at
         if len(text_lower) < 3:
             continue
 
-        # Her şeyi geçtiyse ekle
         aspects.append(token.text)
 
     return list(set(aspects))
 
-
 def predict_sentiment(model, tokenizer, device, text, aspect):
     text_lower = text.lower()
     if "ne " in text_lower and " ne " in text_lower:
-        return "Neutral 😐", 1.0
-    # ----------------------------------------------------
+        return "Neutral", 1.0
 
     encoded = tokenizer.encode_plus(
         text, aspect, max_length=MAX_LEN, add_special_tokens=True,
@@ -129,32 +111,30 @@ def predict_sentiment(model, tokenizer, device, text, aspect):
 
     return CLASS_NAMES[prediction], conf
 
-
-# --- MAIN APP LOOP ---
 if __name__ == "__main__":
     model, tokenizer, nlp, device = load_resources()
 
     print("\n" + "=" * 60)
-    print("🤖 AUTOMATIC ASPECT-BASED SENTIMENT ANALYSIS (STRICT MODE)")
-    print("Type a sentence, and I will find the topics and judge them.")
+    print("ASPECT-BASED SENTIMENT ANALYSIS")
+    print("Type a sentence to find topics and sentiments.")
     print("Type 'q' to quit.")
     print("=" * 60)
 
     while True:
-        sentence = input("\n📝 Enter a sentence: ")
+        sentence = input("\nEnter a sentence: ")
         if sentence.lower() == 'q':
-            print("Goodbye! 👋")
+            print("Goodbye.")
             break
 
         found_aspects = extract_aspects(nlp, sentence)
 
         if not found_aspects:
-            print("⚠️ No specific aspects found in this sentence.")
+            print("No specific aspects found.")
             continue
 
-        print(f"🔎 Detected Aspects: {found_aspects}")
+        print(f"Detected Aspects: {found_aspects}")
         print("-" * 40)
 
         for aspect in found_aspects:
             sentiment, conf = predict_sentiment(model, tokenizer, device, sentence, aspect)
-            print(f"👉 {aspect.ljust(15)} : {sentiment} (Confidence: {conf * 100:.1f}%)")
+            print(f"{aspect.ljust(15)} : {sentiment} (Confidence: {conf * 100:.1f}%)")

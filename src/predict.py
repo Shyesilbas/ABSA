@@ -5,8 +5,7 @@ import os
 
 MODEL_NAME = 'dbmdz/bert-base-turkish-cased'
 MAX_LEN = 128
-class_names = ['Negative', 'Neutral', 'Positive']  # 0, 1, 2
-
+class_names = ['Negative', 'Neutral', 'Positive']
 
 class SentimentClassifier(nn.Module):
     def __init__(self, n_classes):
@@ -21,14 +20,12 @@ class SentimentClassifier(nn.Module):
         output = self.drop(pooled_output)
         return self.out(output)
 
-
 def load_model():
     print("Model is loading, please wait...")
 
     device = torch.device("cpu")
 
     model = SentimentClassifier(n_classes=3)
-
 
     base_path = os.path.dirname(os.path.dirname(__file__))
     model_path = os.path.join(base_path, 'models', 'best_model_state.bin')
@@ -42,7 +39,6 @@ def load_model():
 
     print("Model Loaded successfully!")
     return model, device
-
 
 def predict_sentiment(model, tokenizer, device, text, aspect):
     encoded_review = tokenizer.encode_plus(
@@ -66,7 +62,6 @@ def predict_sentiment(model, tokenizer, device, text, aspect):
 
     return class_names[prediction]
 
-
 if __name__ == "__main__":
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
     model, device = load_model()
@@ -83,4 +78,4 @@ if __name__ == "__main__":
         aspect = input("Enter the aspect: ")
 
         sentiment = predict_sentiment(model, tokenizer, device, sentence, aspect)
-        print(f" Model Says: {sentiment}")
+        print(f"Model Says: {sentiment}")
