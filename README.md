@@ -1,115 +1,63 @@
-# Turkish Aspect-Based Sentiment Analysis (ABSA) Projesi
+# Türkçe cümle düzeyi duygu analizi
 
-Bu proje, Türkçe metinlerde (özellikle sosyal medya verisi) **Aspect-Based Sentiment Analysis (ABSA)** gerçekleştirmek için geliştirilmiş BERT tabanlı bir NLP sistemidir.
+BERT tabanlı **tek etiketli cümle sınıflandırması** (Negative / Neutral / Positive). Ham veri ABSA formatında da olabilir; ön işlemede aynı cümleye ait satırlar **Polarity çoğunluk oyu** ile tek satıra indirgenir.
 
----
+## Klasör yapısı
 
-##  Başlangıç Rehberi
+| Yol | Açıklama |
+|-----|----------|
+| `data/` | Ham CSV, train/val/test split, `outputs/` altında toplu tahmin ve grafikler |
+| `data/turkish_absa_train.csv` | `data_download.py` çıktısı (Sentence, Aspect, Polarity) veya uyumlu ham dosya |
+| `data/train.csv`, `val.csv`, `test.csv` | Sadece `Sentence`, `Polarity` (ön işleme sonrası) |
+| `data/hard_examples.csv` | İsteğe bağlı zor örnekler (`Sentence`, `Polarity`); eğitimde baskın etiket |
+| `data/sample_tweets.csv` | Toplu tahmin için örnek girdi (`text` sütunu) |
+| `data/outputs/` | `sentiment_batch_results.csv`, grafikler, confusion matrix |
+| `models/sentence_best_model.bin` | Eğitimde kaydedilen `state_dict` (`config.MODEL_PATH`) |
+| `src/` | Eğitim, veri, tahmin, metrik |
+| `scripts/` | Yardımcı scriptler |
+| `backend/` + `frontend/` | FastAPI + statik demo arayüz |
 
-Kodları çalıştırmadan önce aşağıdaki kurulum adımlarını tamamlayın.
+**Not:** Eski `best_model_state.bin` (özel `SentimentClassifier` / `out` katmanı) bu mimariyle **uyumlu değildir**. Cümle modeli için `train.py` ile yeniden eğitim gerekir.
 
-Kodlarda import etmeniz gereken kısımlar kırmızı gözükecetir. Onları import edin.
+## Kurulum
 
-### 1. Klasörleri Oluşturun
-Projeyi indirdikten sonra kök dizinde şu iki klasörün olduğundan emin olun (yoksa sağ tıklayıp oluşturun):
+Sanal ortamda bağımlılıkları yükleyin (`requirements.txt`).
 
-- **`data/`**: Veri setlerinin ve analiz sonuçlarının tutulacağı yer.
-  - *Not:* `data_download.py` çalışınca `turkish_absa_train.csv` buraya otomatik gelecek.
-  - *Not:* `data_preprocessing.py` çalışınca `train.csv`, `val.csv`, `test.csv` buraya otomatik gelecek.
-  
-- **`models/`**: Eğitilmiş model dosyasının koyulacağı yer.
-  - Elinizdeki **`best_model_state.bin`** dosyasını bu klasörün içine yapıştırın.
+## Çalıştırma sırası
 
+1. **`src/data_download.py`** — HuggingFace’ten ham veriyi `data/turkish_absa_train.csv` olarak indirir (isteğe bağlı; kendi CSV’nizi de koyabilirsiniz).
+2. **`src/data_preprocessing.py`** — Cümle düzeyine indirger, `train/val/test` üretir.
+3. **`src/train.py`** — Eğitim havuzunu `train.csv` + (varsa) `turkish_absa_train.csv` + Hugging Face alt kümesi (`config.py`: `USE_HF_TRAIN_EXTRA`, `HF_SAMPLE_SIZE`) ile birleştirir; en iyi modeli `models/sentence_best_model.bin` olarak kaydeder (`MODEL_PATH`). İnternet/HF istemezsen `USE_HF_TRAIN_EXTRA = False`; ham ABSA yoksa `MERGE_RAW_ABSA_FOR_TRAIN = False`.
+4. **Tahmin** — Etkileşimli cümle: proje kökünde `python predict.py` **veya** `cd src` → `python predict.py`. (`auto_predict.py` yok; eski ABSA akışı kaldırıldı.)
+5. **`src/batch_predict.py`** — `data/sample_tweets.csv` → `data/outputs/sentiment_batch_results.csv`.
+6. **`src/evaluate_metrics.py`** — Test seti raporu + `data/outputs/confusion_matrix.png`.
+7. **`src/visualize_results.py`** — Toplu sonuç histogramu (`data/outputs/chart_sentiment_distribution.png`).
 
+## Web API
 
-### 2. Türkçe Dil Modelini (SpaCy) İndirin
-Otomatik özellik çıkarımı (Aspect Extraction) için SpaCy gereklidir. Terminalde sırasıyla şunları deneyin:
+Proje kökünden:
 
 ```bash
-# Yöntem 1 (Önerilen)
-python -m spacy download tr_core_news_tr
+uvicorn backend.main:app --reload --app-dir .
 ```
 
-*Hata alırsanız:*
-```bash
-# Yöntem 2
-python -m spacy download tr_core_news_md
-```
+Arayüz kök URL’de; sağlık: `GET /api/health`, tahmin: `POST /api/predict` body `{"text": "..."}`.
 
-*Hala hata alıyorsanız (Alternatif):*
-```bash
-pip install https://huggingface.co/turkish-nlp-suite/tr_core_news_md/resolve/main/tr_core_news_md-1.0-py3-none-any.whl
-```
+## Colab tek script
 
----
+- `scripts/colab_turkish_sentiment_full.py` doğrudan cümle düzeyi sentiment eğitimi yapar.
+- `MERGE_HARD_EXAMPLES` varsayılanı açıktır (`1/true/yes/on`); `0/false` verilirse `hard_examples.csv` birleştirilmez.
+- `hard_examples.csv` kullanmak için dosyanın Colab tarafında `DATA_DIR` altında bulunması gerekir.
+- Not: Bu proje **ABSA inference** yapmaz; ABSA formatlı ham veri yalnızca eğitim havuzunu beslemek için cümle düzeyine indirgenir.
 
-## ️ Adım Adım Çalıştırma
+## Zor örnekleri iyileştirme (ironi, nötr konuşma)
 
-Sistemi uçtan uca çalıştırmak için `src/` klasöründeki dosyaları aşağıdaki sırayla çalıştırın.
+1. `data/hard_examples.csv` dosyasına satır ekle: `Sentence`, `Polarity` (0=Negative, 1=Neutral, 2=Positive).
+2. Aynı cümle büyük havuzda da geçse **`hard_examples` etiketi baskın** gelir (`training_data._merge_hard_overrides`).
+3. `config.py` içinde `MERGE_HARD_EXAMPLES = True` kalsın; Colab scriptinde de varsayılan açıktır.
+4. `train.py` (veya Colab script) ile yeniden eğit.
+5. Yeni zor cümleler geldikçe dosyayı büyüt; yüzlerce tutarlı örnek genelde belirgin fark yaratır.
 
-### Adım 1: Veriyi İndirme 
-HuggingFace üzerinden ham veri setini indirmek için:
-*   Çalıştır: **`src/data_download.py`**
-*   *Sonuç:* `data/turkish_absa_train.csv` dosyası oluşur.
+## Yardımcı scriptler
 
-### Adım 2: Veriyi İşleme ve Bölme 
-Veriyi temizlemek ve Eğitim/Test olarak ayırmak için:
-*   Çalıştır: **`src/data_preprocessing.py`**
-*   *Sonuç:* `data/` klasöründe `train.csv`, `val.csv` ve `test.csv` dosyaları oluşur.
-
-### Adım 3: Model Eğitimi ️ (Opsiyonel)
-Sıfırdan model eğitmek veya mevcut modeli tazelemek isterseniz:
-*   Çalıştır: **`src/train.py`**
-*   *Ne yapar?* `train.csv` verisiyle BERT modelini eğitir ve en iyi sonucu `models/best_model_state.bin` olarak kaydeder.
-*(Not: Eğitim işlemi CPU üzerinde çok yavaş olabilir. Mümkünse GPU kullanılması önerilir.)*
-
-### Adım 4: Tahmin ve Analiz (Prediction) 🔮
-
-Projede üç farklı tahmin yöntemi vardır:
-
-| Dosya | Açıklama                                                                                                                           |
-| :--- |:-----------------------------------------------------------------------------------------------------------------------------------|
-| **`auto_predict.py`** | **Tam Otomatik.** Sadece cümleyi girersiniz, model hem özelliği (aspect) bulur hem de duygu analizi yapar.                         |
-| **`predict.py`** | **Manuel.** Cümleyi ve analiz edilecek özelliği (aspect) sizin girmeniz gerekir.                                                   |
-| **`batch_predict.py`** | **Toplu Analiz.** `data/sample_tweets.csv` dosyasındaki binlerce satırı tek seferde analiz eder. Colabden yapmanız tavsiye edilir. |
-
-**Öneri:** Hızlı sonuç görmek için `auto_predict.py` çalıştırın.
-*(Not: Çok büyük verilerle `batch_predict.py` çalıştıracaksanız, hız için kodu Google Colab'e taşıyıp T4 GPU seçerek çalıştırmanız önerilir. Çıkan `final_report.csv` dosyasını tekrar `data/` klasörüne atabilirsiniz.)*
-
-### Adım 5: Model Performansını Ölçme (Metrikler) 📈
-Modelin doğruluk oranını (Accuracy), F1-Score ve Confusion Matrix değerlerini görmek için:
-*   Çalıştır: **`src/evaulate_metrics.py`**
-    *   *Ne yapar?* Test veri setini (`test.csv`) kullanarak modelin başarısını sayısal olarak ölçer ve raporlar.
-
-### Adım 6: Sonuçları Görselleştirme 
-Çıkan analiz sonuçlarını (final_report.csv) grafiğe dökmek için:
-*   Çalıştır: **`src/visualize_results.py`**
-*   *Sonuç:* `data/` klasörüne `.png` formatında grafikler kaydedilir.
-
----
-
-##  Özet: Sıfırdan Çalıştırma Sırası (Pipeline)
-
-Geliştirme sürecini baştan sona test etmek istiyorsanız, dosyaları şu sırayla çalıştırın:
-
-1.  **`src/data_download.py`** ➔ Veriyi indirir.
-2.  **`src/data_preprocessing.py`** ➔ Veriyi temizler ve böler.
-3.  **`src/train.py`** ➔ Modeli eğitir (Opsiyonel).
-4.  **`src/auto_predict.py`** ➔ Otomatik tahmin yapar.
-5.  **`src/predict.py`** ➔ Manuel tahmin yapar.
-6.  **`src/batch_predict.py`** ➔ Toplu analiz yapar.
-7.  **`src/evaluate_metrics.py`** ➔ Başarı ölçümü yapar.
-8.  **`src/visualize_results.py`** ➔ Sonuçları grafikleştirir.
-
----
-
-##  Karşılaşabileceğiniz Hatalar
-
-
-**Hata:** `FileNotFoundError: Model file not found...`
-*   **Çözüm:** `models/best_model_state.bin` dosyasının doğru klasörde olduğundan emin olun.
-
-**Hata:** `OSError: [E050] Can't find model 'tr_core_news_tr'`
-*   **Çözüm:** Yukarıdaki "3. Türkçe Dil Modelini İndirin" başlığındaki komutları deneyin.
-
----
+- `scripts/inspect_seq_lengths.py` — `train.csv` içinde cümle kelime uzunluğu özeti.

@@ -1,57 +1,44 @@
 import torch
 from torch.utils.data import Dataset
-from transformers import BertTokenizer
+from transformers import AutoTokenizer
 import pandas as pd
-from config import TRAIN_DATA_PATH, MODEL_NAME
 
-class ABSADataset(Dataset):
-    def __init__(self, data_path, tokenizer, max_len=128):
 
-        self.df = pd.read_csv(data_path)
+class SentenceClassificationDataset(Dataset):
+    """Cümle düzeyi: Sentence + Polarity (0,1,2)."""
+
+    def __init__(self, tokenizer, max_len: int, csv_path=None, dataframe=None):
+        if (csv_path is None) == (dataframe is None):
+            raise ValueError("csv_path veya dataframe verin (yalnızca biri).")
+        if dataframe is not None:
+            self.df = dataframe
+        else:
+            self.df = pd.read_csv(csv_path)
+        if "Aspect" in self.df.columns:
+            self.df = self.df.drop(columns=["Aspect"])
+        self.df = self.df.dropna(subset=["Sentence", "Polarity"])
+        self.df["Sentence"] = self.df["Sentence"].astype(str).str.strip()
+        self.texts = self.df["Sentence"].values
+        self.labels = self.df["Polarity"].astype(int).values
         self.tokenizer = tokenizer
         self.max_len = max_len
 
-        self.sentences = self.df.Sentence.values
-        self.aspects = self.df.Aspect.values
-        self.labels = self.df.Polarity.values
-
     def __len__(self):
-        return len(self.df)
+        return len(self.texts)
 
-    def __getitem__(self, item):
-        review = str(self.sentences[item])
-        aspect = str(self.aspects[item])
-        label = self.labels[item]
-
-        encoding = self.tokenizer.encode_plus(
-            review,
-            aspect,
-            add_special_tokens=True,
+    def __getitem__(self, idx):
+        text = str(self.texts[idx])
+        y = int(self.labels[idx])
+        enc = self.tokenizer(
+            text,
             max_length=self.max_len,
-            return_token_type_ids=False,
-            padding='max_length',
+            padding="max_length",
             truncation=True,
-            return_attention_mask=True,
-            return_tensors='pt',
+            return_tensors="pt",
         )
-
         return {
-            'review_text': review,
-            'input_ids': encoding['input_ids'].flatten(),
-            'attention_mask': encoding['attention_mask'].flatten(),
-            'targets': torch.tensor(label, dtype=torch.long)
+            "sentence": text,
+            "input_ids": enc["input_ids"].squeeze(0),
+            "attention_mask": enc["attention_mask"].squeeze(0),
+            "labels": torch.tensor(y, dtype=torch.long),
         }
-
-if __name__ == "__main__":
-    tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
-
-    dataset = ABSADataset(TRAIN_DATA_PATH, tokenizer)
-
-    sample = dataset[0]
-
-    print("-" * 30)
-    print("Sample Sentence:", sample['review_text'])
-    print("Tokenize edition (Input IDs):", sample['input_ids'][:20])
-    print("Target Label:", sample['targets'])
-    print("-" * 30)
-    print("Test Successful! Data is suitable for BERT format.")

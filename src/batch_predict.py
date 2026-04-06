@@ -1,88 +1,72 @@
-import pandas as pd
 import os
+import pandas as pd
 from tqdm import tqdm
-from config import SAMPLE_TWEETS_PATH, FINAL_REPORT_PATH
-from model_utils import load_model_resources, extract_aspects, predict_sentiment_single
+
+from config import SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH, OUTPUTS_DIR
+from model_utils import load_classifier, predict_sentence
+
 
 def read_file_smart(filepath):
     try:
-        df = pd.read_csv(filepath, sep=';')
+        df = pd.read_csv(filepath, sep=";")
         df.columns = df.columns.str.strip()
-
         if len(df.columns) > 1:
             return df
-    except:
+    except Exception:
         pass
-
     try:
-        df = pd.read_csv(filepath, sep=',')
+        df = pd.read_csv(filepath, sep=",")
         df.columns = df.columns.str.strip()
         return df
     except Exception as e:
-        print(f"Could not read file: {e}")
+        print(f"Dosya okunamadı: {e}")
         return None
 
+
 def process_batch(input_file, output_file):
-    model, tokenizer, nlp, device = load_model_resources()
+    model, tokenizer, device = load_classifier()
 
     if not os.path.exists(input_file):
-        print(f"Input file not found : {input_file}")
+        print(f"Girdi yok: {input_file}")
         return
 
     df = read_file_smart(input_file)
-
     if df is None:
         return
 
-    if 'text' not in df.columns:
+    if "text" not in df.columns:
         for col in df.columns:
-            if col.lower() in ['tweet', 'tweets', 'content', 'metin']:
-                df.rename(columns={col: 'text'}, inplace=True)
+            if col.lower() in ("tweet", "tweets", "content", "metin", "sentence"):
+                df = df.rename(columns={col: "text"})
                 break
 
-    if 'text' not in df.columns:
-        print(f"Error: Could not find a 'text' column. Available columns: {df.columns.tolist()}")
+    if "text" not in df.columns:
+        print(f"'text' sütunu yok. Sütunlar: {df.columns.tolist()}")
         return
 
+    os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
     results = []
-    print("Analysis Started...")
 
-    for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing"):
-        text = row.get('text')
-        tweet_id = row.get('id', index)
-
-        if not isinstance(text, str) or len(str(text)) < 2:
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Tahmin"):
+        text = row.get("text")
+        rid = row.get("id", row.name)
+        if not isinstance(text, str) or len(text.strip()) < 2:
             continue
+        label, probs = predict_sentence(model, tokenizer, device, text)
+        conf = float(max(probs))
+        results.append(
+            {
+                "id": rid,
+                "text": text,
+                "sentiment": label,
+                "confidence": round(conf, 4),
+            }
+        )
 
-        aspects = extract_aspects(nlp, str(text))
+    pd.DataFrame(results).to_csv(output_file, index=False)
+    print(f"Satır: {len(results)}  -> {output_file}")
 
-        if not aspects:
-            results.append({
-                'id': tweet_id,
-                'text': text,
-                'detected_aspect': 'GENERAL',
-                'sentiment': 'Neutral',
-                'confidence_score': 0.0
-            })
-            continue
-
-        for aspect in aspects:
-            sentiment, conf = predict_sentiment_single(model, tokenizer, device, str(text), aspect)
-
-            results.append({
-                'id': tweet_id,
-                'text': text,
-                'detected_aspect': aspect,
-                'sentiment': sentiment,
-                'confidence_score': round(conf * 100, 2)
-            })
-
-    results_df = pd.DataFrame(results)
-    results_df.to_csv(output_file, index=False)
-
-    print("-" * 50)
-    print(f"Processed {len(df)} tweets, found {len(results_df)} sentiment targets.")
-    print(f"Report saved to: {output_file}")
 
 if __name__ == "__main__":
-    process_batch(SAMPLE_TWEETS_PATH, FINAL_REPORT_PATH)
+    os.makedirs(OUTPUTS_DIR, exist_ok=True)
+    process_batch(SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH)

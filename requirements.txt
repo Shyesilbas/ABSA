@@ -5,7 +5,7 @@ numpy
 scikit-learn
 tqdm
 datasets
-spacy
 matplotlib
 seaborn
-
+fastapi
+uvicorn[standard]

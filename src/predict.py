@@ -1,18 +1,17 @@
-from model_utils import load_model_resources, predict_sentiment_single
+from model_utils import load_classifier, predict_sentence
 
 if __name__ == "__main__":
-    model, tokenizer, _, device = load_model_resources()
+    model, tokenizer, device = load_classifier()
 
     print("-" * 50)
-    print("TEST PHASE (Press 'q' to quit.)")
+    print("Cümle düzeyi tahmin (çıkmak için q)")
     print("-" * 50)
 
     while True:
-        sentence = input("\nEnter a sentence: ")
-        if sentence.lower() == 'q':
+        sentence = input("\nCümle: ").strip()
+        if sentence.lower() == "q":
             break
-
-        aspect = input("Enter the aspect: ")
-
-        sentiment, _ = predict_sentiment_single(model, tokenizer, device, sentence, aspect)
-        print(f"Model Says: {sentiment}")
+        if not sentence:
+            continue
+        label, probs = predict_sentence(model, tokenizer, device, sentence)
+        print(f"Tahmin: {label}  olasılıklar: {[round(p, 4) for p in probs]}")

@@ -1,9 +1,11 @@
+"""Ham ABSA verisi indirir; cümle düzeyi split için `data_preprocessing.py` kullanın."""
 import pandas as pd
 from datasets import load_dataset
 from config import RAW_DATA_PATH
 
+
 def download_and_save_data():
-    print("Dataset is downloading...")
+    print("Veri indiriliyor...")
     dataset = load_dataset("Sengil/Turkish-ABSA-Wsynthetic")
 
     df_train = pd.DataFrame(dataset['train'])
