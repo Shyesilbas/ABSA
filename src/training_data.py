@@ -1,4 +1,4 @@
-"""Eğitim havuzu: train.csv + ham ABSA (isteğe bağlı) + Hugging Face alt kümesi (isteğe bağlı)."""
+"""Training pool builder from local CSV, raw ABSA, and optional HF subset."""
 from __future__ import annotations
 
 import os
@@ -7,22 +7,15 @@ import numpy as np
 import pandas as pd
 from datasets import load_dataset
 
-
-def _polarity_mode(s: pd.Series) -> int:
-    return int(s.value_counts().idxmax())
-
+from data_contracts import (
+    prepare_sentence_polarity_frame,
+    deduplicate_by_sentence_majority,
+)
 
 def _prep_csv(path: str) -> pd.DataFrame:
     df = pd.read_csv(path)
-    if "Aspect" in df.columns:
-        df = df.drop(columns=["Aspect"])
-    df = df.rename(columns={c: c.strip() for c in df.columns})
-    if "Sentence" not in df.columns or "Polarity" not in df.columns:
-        raise ValueError(f"Beklenen sütunlar yok: {df.columns.tolist()} — {path}")
-    df["Sentence"] = df["Sentence"].astype(str).str.strip()
-    df["Polarity"] = pd.to_numeric(df["Polarity"], errors="coerce").fillna(1).astype(int)
-    df = df[df["Sentence"].str.len() > 0]
-    return df.groupby("Sentence", as_index=False)["Polarity"].agg(_polarity_mode)
+    out = prepare_sentence_polarity_frame(df, fill_missing_label=1)
+    return deduplicate_by_sentence_majority(out)
 
 
 def map_hf_label(y) -> int:
@@ -52,11 +45,11 @@ def _hf_text_field(example: dict) -> str:
     for key in ("sentence", "text", "tweet", "Text", "Sentence", "comment"):
         if key in example and example[key] is not None:
             return str(example[key]).strip()
-    raise KeyError(f"Metin alanı bulunamadı: {list(example.keys())}")
+    raise KeyError(f"No text field found in example keys: {list(example.keys())}")
 
 
 def load_hf_subset(dataset_id: str, n: int, seed: int) -> pd.DataFrame:
-    print(f"Hugging Face indiriliyor: {dataset_id} …")
+    print(f"Downloading Hugging Face dataset: {dataset_id} ...")
     ds = load_dataset(dataset_id, split="train")
     ds = ds.shuffle(seed=seed)
     ds = ds.select(range(min(n, len(ds))))
@@ -66,7 +59,7 @@ def load_hf_subset(dataset_id: str, n: int, seed: int) -> pd.DataFrame:
             label_key = c
             break
     if label_key is None:
-        raise RuntimeError(f"Etiket sütunu yok: {ds.column_names}")
+        raise RuntimeError(f"No label column found: {ds.column_names}")
 
     rows = []
     for i in range(len(ds)):
@@ -79,12 +72,12 @@ def load_hf_subset(dataset_id: str, n: int, seed: int) -> pd.DataFrame:
 
 
 def _merge_hard_overrides(train_pool: pd.DataFrame, hard_path: str) -> pd.DataFrame:
-    """Aynı cümle genel havuzda da olsa hard_examples etiketi kazanır."""
+    """Hard example labels override duplicates from the training pool."""
     hard_df = _prep_csv(hard_path)
     drop_s = set(hard_df["Sentence"])
     out = train_pool[~train_pool["Sentence"].isin(drop_s)]
     out = pd.concat([out, hard_df], ignore_index=True)
-    print(f"hard_examples: {len(hard_df)} satır birleştirildi (çakışan cümlelerde bu dosya baskın).")
+    print(f"Merged hard_examples rows: {len(hard_df)} (hard labels win on duplicates).")
     return out
 
 
@@ -105,15 +98,15 @@ def build_train_val_frames(
     if merge_raw and os.path.isfile(raw_path):
         parts.append(_prep_csv(raw_path))
     elif merge_raw:
-        print(f"Uyarı: ham ABSA yok, atlanıyor: {raw_path}")
+        print(f"Warning: raw ABSA file not found, skipping: {raw_path}")
 
     train_pool = pd.concat(parts, ignore_index=True)
-    train_pool = train_pool.groupby("Sentence", as_index=False)["Polarity"].agg(_polarity_mode)
+    train_pool = deduplicate_by_sentence_majority(train_pool)
 
     if use_hf:
         hf_df = load_hf_subset(hf_dataset_id, hf_sample_size, hf_seed)
         train_pool = pd.concat([train_pool, hf_df], ignore_index=True)
-        train_pool = train_pool.groupby("Sentence", as_index=False)["Polarity"].agg(_polarity_mode)
+        train_pool = deduplicate_by_sentence_majority(train_pool)
 
     if merge_hard and hard_path and os.path.isfile(hard_path):
         train_pool = _merge_hard_overrides(train_pool, hard_path)

@@ -1,23 +1,21 @@
 import torch
 from torch.utils.data import Dataset
-from transformers import AutoTokenizer
 import pandas as pd
+
+from data_contracts import prepare_sentence_polarity_frame
 
 
 class SentenceClassificationDataset(Dataset):
-    """Cümle düzeyi: Sentence + Polarity (0,1,2)."""
+    """Sentence-level dataset with Sentence and Polarity columns."""
 
     def __init__(self, tokenizer, max_len: int, csv_path=None, dataframe=None):
         if (csv_path is None) == (dataframe is None):
-            raise ValueError("csv_path veya dataframe verin (yalnızca biri).")
+            raise ValueError("Provide exactly one of csv_path or dataframe.")
         if dataframe is not None:
             self.df = dataframe
         else:
             self.df = pd.read_csv(csv_path)
-        if "Aspect" in self.df.columns:
-            self.df = self.df.drop(columns=["Aspect"])
-        self.df = self.df.dropna(subset=["Sentence", "Polarity"])
-        self.df["Sentence"] = self.df["Sentence"].astype(str).str.strip()
+        self.df = prepare_sentence_polarity_frame(self.df, fill_missing_label=None)
         self.texts = self.df["Sentence"].values
         self.labels = self.df["Polarity"].astype(int).values
         self.tokenizer = tokenizer

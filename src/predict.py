@@ -4,14 +4,14 @@ if __name__ == "__main__":
     model, tokenizer, device = load_classifier()
 
     print("-" * 50)
-    print("Cümle düzeyi tahmin (çıkmak için q)")
+    print("Sentence-level prediction (type q to quit)")
     print("-" * 50)
 
     while True:
-        sentence = input("\nCümle: ").strip()
+        sentence = input("\nSentence: ").strip()
         if sentence.lower() == "q":
             break
         if not sentence:
             continue
         label, probs = predict_sentence(model, tokenizer, device, sentence)
-        print(f"Tahmin: {label}  olasılıklar: {[round(p, 4) for p in probs]}")
+        print(f"Prediction: {label}  probabilities: {[round(p, 4) for p in probs]}")

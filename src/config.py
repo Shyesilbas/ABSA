@@ -5,15 +5,15 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 OUTPUTS_DIR = os.path.join(DATA_DIR, "outputs")
 
-# Ham veri (indirme çıktısı)
+# Raw dataset output
 RAW_DATA_PATH = os.path.join(DATA_DIR, "turkish_absa_train.csv")
 
-# İşlenmiş cümle düzeyi CSV (Sentence, Polarity)
+# Processed sentence-level CSVs (Sentence, Polarity)
 TRAIN_DATA_PATH = os.path.join(DATA_DIR, "train.csv")
 VAL_DATA_PATH = os.path.join(DATA_DIR, "val.csv")
 TEST_DATA_PATH = os.path.join(DATA_DIR, "test.csv")
 
-# Toplu tahmin
+# Batch prediction
 SAMPLE_TEXTS_PATH = os.path.join(DATA_DIR, "sample_tweets.csv")
 BATCH_RESULTS_PATH = os.path.join(OUTPUTS_DIR, "sentiment_batch_results.csv")
 
@@ -40,13 +40,13 @@ USE_AMP = True
 WARMUP_RATIO = 0.1
 DATALOADER_NUM_WORKERS = 2
 
-# Eğitim verisi genişletme (train.py; Colab script ile aynı mantık)
+# Training pool expansion
 MERGE_RAW_ABSA_FOR_TRAIN = True
 USE_HF_TRAIN_EXTRA = True
 HF_DATASET_ID = "winvoker/turkish-sentiment-analysis-dataset"
 HF_SAMPLE_SIZE = 10_000
 HF_SEED = 42
 
-# Elle seçilmiş zor örnekler (ironi, nötr konuşma vb.); train’de aynı cümle varsa bu etiket baskın
+# Manually curated hard examples override duplicate sentences
 HARD_EXAMPLES_PATH = os.path.join(DATA_DIR, "hard_examples.csv")
 MERGE_HARD_EXAMPLES = True

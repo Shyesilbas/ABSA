@@ -19,7 +19,7 @@ def read_file_smart(filepath):
         df.columns = df.columns.str.strip()
         return df
     except Exception as e:
-        print(f"Dosya okunamadı: {e}")
+        print(f"Failed to read file: {e}")
         return None
 
 
@@ -27,7 +27,7 @@ def process_batch(input_file, output_file):
     model, tokenizer, device = load_classifier()
 
     if not os.path.exists(input_file):
-        print(f"Girdi yok: {input_file}")
+        print(f"Input file not found: {input_file}")
         return
 
     df = read_file_smart(input_file)
@@ -41,13 +41,13 @@ def process_batch(input_file, output_file):
                 break
 
     if "text" not in df.columns:
-        print(f"'text' sütunu yok. Sütunlar: {df.columns.tolist()}")
+        print(f"Missing 'text' column. Available columns: {df.columns.tolist()}")
         return
 
     os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
     results = []
 
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Tahmin"):
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Predicting"):
         text = row.get("text")
         rid = row.get("id", row.name)
         if not isinstance(text, str) or len(text.strip()) < 2:
@@ -64,7 +64,7 @@ def process_batch(input_file, output_file):
         )
 
     pd.DataFrame(results).to_csv(output_file, index=False)
-    print(f"Satır: {len(results)}  -> {output_file}")
+    print(f"Rows written: {len(results)} -> {output_file}")
 
 
 if __name__ == "__main__":

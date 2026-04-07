@@ -11,8 +11,8 @@ from config import BATCH_RESULTS_PATH, OUTPUTS_DIR
 
 def main():
     if not os.path.exists(BATCH_RESULTS_PATH):
-        print(f"CSV yok: {BATCH_RESULTS_PATH}")
-        print("Önce batch_predict çalıştırın.")
+        print(f"CSV not found: {BATCH_RESULTS_PATH}")
+        print("Run batch_predict first.")
         return
 
     os.makedirs(OUTPUTS_DIR, exist_ok=True)
@@ -20,7 +20,7 @@ def main():
     df.columns = df.columns.str.strip()
 
     if "sentiment" not in df.columns:
-        print("Beklenen sütun: sentiment")
+        print("Missing required column: sentiment")
         return
 
     if "confidence" in df.columns:
@@ -37,9 +37,9 @@ def main():
         palette=colors,
         order=[o for o in order if o in set(df["sentiment"].unique())],
     )
-    plt.title(f"Duygu dağılımı (n={len(df)})", fontsize=14, fontweight="bold")
-    plt.xlabel("Sınıf")
-    plt.ylabel("Adet")
+    plt.title(f"Sentiment distribution (n={len(df)})", fontsize=14, fontweight="bold")
+    plt.xlabel("Class")
+    plt.ylabel("Count")
 
     for p in ax.patches:
         h = int(p.get_height())
@@ -58,7 +58,7 @@ def main():
     plt.tight_layout()
     plt.savefig(out, dpi=300)
     plt.close()
-    print(f"Grafik: {out}")
+    print(f"Chart saved: {out}")
     print(df["sentiment"].value_counts())
 
 

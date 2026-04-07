@@ -8,7 +8,6 @@ import seaborn as sns
 import torch
 from sklearn.metrics import classification_report, confusion_matrix
 from torch.utils.data import DataLoader
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from config import (
     MODEL_NAME,
@@ -19,6 +18,7 @@ from config import (
     OUTPUTS_DIR,
 )
 from dataset_loader import SentenceClassificationDataset
+from model_loader import load_finetuned_resources
 
 
 @torch.no_grad()
@@ -39,8 +39,8 @@ def collect_predictions(model, loader, device):
 def plot_cm(cm, path):
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=CLASS_NAMES, yticklabels=CLASS_NAMES)
-    plt.ylabel("Gerçek")
-    plt.xlabel("Tahmin")
+    plt.ylabel("True")
+    plt.xlabel("Predicted")
     plt.title("Confusion Matrix")
     plt.tight_layout()
     plt.savefig(path, dpi=200)
@@ -52,15 +52,14 @@ def main():
         raise FileNotFoundError(MODEL_PATH)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    model, tokenizer, device = load_finetuned_resources(
+        model_name=MODEL_NAME,
+        model_path=MODEL_PATH,
+        class_names=CLASS_NAMES,
+        device=device,
+    )
     test_ds = SentenceClassificationDataset(tokenizer, MAX_LEN, csv_path=TEST_DATA_PATH)
     loader = DataLoader(test_ds, batch_size=32, shuffle=False)
-
-    model = AutoModelForSequenceClassification.from_pretrained(
-        MODEL_NAME, num_labels=len(CLASS_NAMES)
-    )
-    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
-    model.to(device)
 
     y_true, y_pred = collect_predictions(model, loader, device)
 
@@ -69,7 +68,7 @@ def main():
     os.makedirs(OUTPUTS_DIR, exist_ok=True)
     cm_path = os.path.join(OUTPUTS_DIR, "confusion_matrix.png")
     plot_cm(confusion_matrix(y_true, y_pred), cm_path)
-    print(f"CM: {cm_path}")
+    print(f"Confusion matrix saved: {cm_path}")
 
 
 if __name__ == "__main__":
