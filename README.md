@@ -108,6 +108,10 @@ Sistemi bir "fabrika hattı" gibi düşünebilirsiniz:
   - Dosya yapısını doğrular.
   - Model ve tokenizer'ı çalışmaya hazır döndürür.
 
+- `src/progress.py`
+  - Uzun döngülerde terminalde yüzde ve ilerleme çubuğu (`track`, `loader_total`).
+  - Eğitim, değerlendirme, batch tahmin ve HF satır işlemede kullanılır.
+
 - `src/trainer.py`
   - Eğitim döngüsünün motorudur.
   - Loss hesabı, epoch eğitim/değerlendirme, checkpoint kaydı ve early stopping burada yönetilir.
@@ -243,13 +247,6 @@ Notlar:
      - Dosya: `src/visualize_results.py`
      - Çıktı: `data/outputs/chart_sentiment_distribution.png`
 
-8. API ile dış sistemlere aç (opsiyonel).
-   - Dosya: `backend/main.py`
-   - Kullanılan sınıflar: `PredictBody`, `SentenceSentiment`
-   - İç akış:
-     - Açılışta model yükleme: `lifespan()` içinde `load_classifier()`
-     - Sağlık kontrolü: `/api/health`
-     - Tahmin: `/api/predict`
 
 ### Senaryo B: Sadece hazır modelle tahmin yapmak isteyen ekip
 
@@ -291,6 +288,35 @@ Tüm kritik kararlar `src/config.py` içindedir:
 - Hard example birleştirme davranışı
 
 Bu sayede ekip, farklı dosyalara dağılmadan merkezi konfigürasyonla çalışır.
+
+---
+
+## 10.1) Confidence Fallback Policy (Yeni)
+
+Model düşük güvenle tahmin ürettiğinde, etiketi zorlamamak için fallback politikası uygulanır.
+
+Konfigürasyon (`src/config.py`):
+- `CONFIDENCE_FALLBACK_ENABLED`: fallback aktif/pasif.
+- `CONFIDENCE_THRESHOLD`: güven eşiği (ör. `0.70`).
+- `CONFIDENCE_FALLBACK_LABEL`: eşik altı durumda verilecek etiket (varsayılan `Neutral`).
+
+Davranış:
+- Model önce ham tahmini ve olasılıkları üretir.
+- `max(probabilities) < CONFIDENCE_THRESHOLD` ise final etiket fallback etikete çevrilir.
+- Böylece gri/kararsız Twitter cümlelerinde aşırı güvenli yanlışlar azaltılır.
+
+Etkilenen dosyalar:
+- `src/model_utils.py`
+  - `predict_sentence()` geriye uyumludur (mevcut kullanım kırılmaz).
+  - `predict_sentence_with_meta()` ile `raw_label`, `confidence`, `fallback_applied` bilgileri döner.
+- `src/predict.py`
+  - Terminal çıktısında fallback uygulandığı görünür.
+- `src/batch_predict.py`
+  - Çıktı CSV'sine `raw_sentiment` ve `fallback_applied` kolonları eklenir.
+  - Süreç sonunda kaç satırda fallback uygulandığı loglanır.
+
+Not:
+- Bu politika sadece inference tarafını etkiler, eğitim metriklerini değiştirmez.
 
 ---
 

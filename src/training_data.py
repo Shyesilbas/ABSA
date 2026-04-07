@@ -11,6 +11,7 @@ from data_contracts import (
     prepare_sentence_polarity_frame,
     deduplicate_by_sentence_majority,
 )
+from progress import track
 
 def _prep_csv(path: str) -> pd.DataFrame:
     df = pd.read_csv(path)
@@ -62,7 +63,8 @@ def load_hf_subset(dataset_id: str, n: int, seed: int) -> pd.DataFrame:
         raise RuntimeError(f"No label column found: {ds.column_names}")
 
     rows = []
-    for i in range(len(ds)):
+    n = len(ds)
+    for i in track(range(n), total=n, desc="HF subset", unit="row"):
         ex = ds[i]
         text = _hf_text_field(ex)
         if len(text) < 1:

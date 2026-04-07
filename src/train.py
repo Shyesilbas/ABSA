@@ -152,6 +152,7 @@ def main():
 
     if os.path.isfile(MODEL_PATH):
         model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+
     print(f"Training completed. Best val macro_f1: {best_f1:.4f}")
 
 

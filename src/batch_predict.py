@@ -1,9 +1,9 @@
 import os
 import pandas as pd
-from tqdm import tqdm
 
 from config import SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH, OUTPUTS_DIR
-from model_utils import load_classifier, predict_sentence
+from progress import track
+from model_utils import load_classifier, predict_sentence_with_meta
 
 
 def read_file_smart(filepath):
@@ -46,25 +46,31 @@ def process_batch(input_file, output_file):
 
     os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
     results = []
+    fallback_count = 0
 
-    for _, row in tqdm(df.iterrows(), total=len(df), desc="Predicting"):
+    for _, row in track(df.iterrows(), total=len(df), desc="Batch predict", unit="row"):
         text = row.get("text")
         rid = row.get("id", row.name)
         if not isinstance(text, str) or len(text.strip()) < 2:
             continue
-        label, probs = predict_sentence(model, tokenizer, device, text)
-        conf = float(max(probs))
+        label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, text)
+        conf = float(meta["confidence"])
+        fallback_applied = bool(meta["fallback_applied"])
+        fallback_count += int(fallback_applied)
         results.append(
             {
                 "id": rid,
                 "text": text,
                 "sentiment": label,
+                "raw_sentiment": meta["raw_label"],
+                "fallback_applied": fallback_applied,
                 "confidence": round(conf, 4),
             }
         )
 
     pd.DataFrame(results).to_csv(output_file, index=False)
     print(f"Rows written: {len(results)} -> {output_file}")
+    print(f"Confidence fallback applied: {fallback_count}/{len(results)}")
 
 
 if __name__ == "__main__":

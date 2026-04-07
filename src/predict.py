@@ -1,4 +1,4 @@
-from model_utils import load_classifier, predict_sentence
+from model_utils import load_classifier, predict_sentence_with_meta
 
 if __name__ == "__main__":
     model, tokenizer, device = load_classifier()
@@ -13,5 +13,9 @@ if __name__ == "__main__":
             break
         if not sentence:
             continue
-        label, probs = predict_sentence(model, tokenizer, device, sentence)
-        print(f"Prediction: {label}  probabilities: {[round(p, 4) for p in probs]}")
+        label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, sentence)
+        fallback_note = " [fallback]" if meta["fallback_applied"] else ""
+        print(
+            f"Prediction: {label}{fallback_note}  raw={meta['raw_label']}  "
+            f"confidence={meta['confidence']:.4f}  probabilities: {[round(p, 4) for p in probs]}"
+        )

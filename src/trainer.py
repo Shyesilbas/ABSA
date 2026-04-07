@@ -8,6 +8,8 @@ import torch
 import torch.nn as nn
 from sklearn.metrics import classification_report, f1_score
 
+from progress import loader_total, track
+
 try:
     from torch.cuda.amp import autocast as _cuda_autocast
 except ImportError:
@@ -62,10 +64,22 @@ def build_loss_fn(
     return nn.CrossEntropyLoss(weight=class_weights)
 
 
-def train_epoch(model, loader, optimizer, scheduler, device, use_amp, scaler, loss_fn):
+def train_epoch(
+    model,
+    loader,
+    optimizer,
+    scheduler,
+    device,
+    use_amp,
+    scaler,
+    loss_fn,
+    *,
+    progress_desc: str = "Train",
+):
     model.train()
     losses = []
-    for batch in loader:
+    n_batches = loader_total(loader)
+    for batch in track(loader, total=n_batches, desc=progress_desc, unit="batch"):
         optimizer.zero_grad(set_to_none=True)
         input_ids = batch["input_ids"].to(device, non_blocking=True)
         attention_mask = batch["attention_mask"].to(device, non_blocking=True)
@@ -92,11 +106,20 @@ def train_epoch(model, loader, optimizer, scheduler, device, use_amp, scaler, lo
 
 
 @torch.no_grad()
-def evaluate_epoch(model, loader, loss_fn, device, use_amp):
+def evaluate_epoch(
+    model,
+    loader,
+    loss_fn,
+    device,
+    use_amp,
+    *,
+    progress_desc: str = "Val",
+):
     model.eval()
     all_y, all_p = [], []
     losses = []
-    for batch in loader:
+    n_batches = loader_total(loader)
+    for batch in track(loader, total=n_batches, desc=progress_desc, unit="batch"):
         input_ids = batch["input_ids"].to(device, non_blocking=True)
         attention_mask = batch["attention_mask"].to(device, non_blocking=True)
         labels = batch["labels"].to(device, non_blocking=True)
@@ -132,11 +155,25 @@ def fit(
     stale_epochs = 0
 
     for epoch in range(epochs):
+        ep = epoch + 1
         train_loss = train_epoch(
-            model, train_loader, optimizer, scheduler, device, use_amp, scaler, loss_fn
+            model,
+            train_loader,
+            optimizer,
+            scheduler,
+            device,
+            use_amp,
+            scaler,
+            loss_fn,
+            progress_desc=f"Train {ep}/{epochs}",
         )
         val_loss, macro_f1, y_true, y_pred = evaluate_epoch(
-            model, val_loader, loss_fn, device, use_amp
+            model,
+            val_loader,
+            loss_fn,
+            device,
+            use_amp,
+            progress_desc=f"Val {ep}/{epochs}",
         )
         print(
             f"\nEpoch {epoch + 1}/{epochs} "

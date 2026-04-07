@@ -19,13 +19,15 @@ from config import (
 )
 from dataset_loader import SentenceClassificationDataset
 from model_loader import load_finetuned_resources
+from progress import loader_total, track
 
 
 @torch.no_grad()
-def collect_predictions(model, loader, device):
+def collect_predictions(model, loader, device, *, progress_desc: str = "Test eval"):
     model.eval()
     all_y, all_p = [], []
-    for batch in loader:
+    n_batches = loader_total(loader)
+    for batch in track(loader, total=n_batches, desc=progress_desc, unit="batch"):
         ids = batch["input_ids"].to(device)
         mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)

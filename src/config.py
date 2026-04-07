@@ -50,3 +50,8 @@ HF_SEED = 42
 # Manually curated hard examples override duplicate sentences
 HARD_EXAMPLES_PATH = os.path.join(DATA_DIR, "hard_examples.csv")
 MERGE_HARD_EXAMPLES = True
+
+# Inference confidence policy
+CONFIDENCE_FALLBACK_ENABLED = True
+CONFIDENCE_THRESHOLD = 0.70
+CONFIDENCE_FALLBACK_LABEL = "Neutral"
