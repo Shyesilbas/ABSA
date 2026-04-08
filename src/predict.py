@@ -1,4 +1,4 @@
-from model_utils import load_classifier, predict_sentence_with_meta
+from model.inference import load_classifier, predict_sentence_with_meta
 
 if __name__ == "__main__":
     model, tokenizer, device = load_classifier()

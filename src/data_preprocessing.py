@@ -1,4 +1,6 @@
 import pandas as pd
+import json
+import os
 from sklearn.model_selection import train_test_split
 
 from config import (
@@ -8,13 +10,19 @@ from config import (
     VAL_DATA_PATH,
     TEST_DATA_PATH,
     RANDOM_SEED,
+    LEAKAGE_GUARD_ENABLED,
+    LEAKAGE_REPORT_PATH,
 )
-from data_contracts import prepare_sentence_polarity_frame, deduplicate_by_sentence_majority
+from data.contracts import prepare_sentence_polarity_frame, deduplicate_by_sentence_majority
 
 
 def _sentence_level(df: pd.DataFrame) -> pd.DataFrame:
     out = prepare_sentence_polarity_frame(df, fill_missing_label=None)
     return deduplicate_by_sentence_majority(out)
+
+
+def _overlap_count(a: pd.DataFrame, b: pd.DataFrame) -> int:
+    return int(len(set(a["Sentence"]).intersection(set(b["Sentence"]))))
 
 
 def process_data():
@@ -31,6 +39,14 @@ def process_data():
         temp_df, test_size=0.5, random_state=RANDOM_SEED, stratify=temp_df["Polarity"]
     )
 
+    overlap_report = {
+        "train_val_overlap": _overlap_count(train_df, val_df),
+        "train_test_overlap": _overlap_count(train_df, test_df),
+        "val_test_overlap": _overlap_count(val_df, test_df),
+    }
+    if LEAKAGE_GUARD_ENABLED and any(v > 0 for v in overlap_report.values()):
+        raise ValueError(f"Data leakage detected between splits: {overlap_report}")
+
     print("-" * 30)
     print(f"Train: {len(train_df)}")
     print(f"Val: {len(val_df)}")
@@ -41,6 +57,10 @@ def process_data():
     test_df.to_csv(TEST_DATA_PATH, index=False)
 
     print(f"Saved to: {DATA_DIR}")
+    os.makedirs(os.path.dirname(LEAKAGE_REPORT_PATH), exist_ok=True)
+    with open(LEAKAGE_REPORT_PATH, "w", encoding="utf-8") as f:
+        json.dump(overlap_report, f, ensure_ascii=True, indent=2)
+    print(f"Leakage report saved: {LEAKAGE_REPORT_PATH}")
 
 
 if __name__ == "__main__":

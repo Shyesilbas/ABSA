@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import os
 import random
+from datetime import datetime, timezone
 from typing import Any
 
 import numpy as np
@@ -43,10 +45,15 @@ from config import (
     HF_SEED,
     HARD_EXAMPLES_PATH,
     MERGE_HARD_EXAMPLES,
+    LEAKAGE_GUARD_ENABLED,
+    EXPERIMENT_ARTIFACT_PATH,
+    CONFIDENCE_FALLBACK_ENABLED,
+    CONFIDENCE_THRESHOLD,
+    CONFIDENCE_FALLBACK_LABEL,
 )
-from dataset_loader import SentenceClassificationDataset
-from trainer import build_loss_fn, fit
-from training_data import build_train_val_frames
+from data.dataset_loader import SentenceClassificationDataset
+from data.training_data import build_train_val_frames
+from model.trainer import build_loss_fn, fit
 
 
 def set_seed(seed: int) -> None:
@@ -80,6 +87,57 @@ def build_dataloaders(train_df, val_df, tokenizer, cuda_ok: bool):
     return train_loader, val_loader
 
 
+def _save_experiment_artifact(
+    *,
+    path: str,
+    best_f1: float,
+    history: list[dict[str, float | int | bool]],
+    train_size: int,
+    val_size: int,
+    device: str,
+    use_amp: bool,
+) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    payload = {
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "model_name": MODEL_NAME,
+        "model_path": MODEL_PATH,
+        "class_names": CLASS_NAMES,
+        "dataset_sizes": {"train": train_size, "val": val_size},
+        "runtime": {"device": device, "use_amp": bool(use_amp)},
+        "config_snapshot": {
+            "random_seed": RANDOM_SEED,
+            "batch_size": BATCH_SIZE,
+            "epochs": EPOCHS,
+            "learning_rate": LEARNING_RATE,
+            "max_len": MAX_LEN,
+            "warmup_ratio": WARMUP_RATIO,
+            "use_class_weights": USE_CLASS_WEIGHTS,
+            "neutral_class_index": NEUTRAL_CLASS_INDEX,
+            "neutral_loss_boost": NEUTRAL_LOSS_BOOST,
+            "early_stopping": EARLY_STOPPING,
+            "early_stopping_patience": EARLY_STOPPING_PATIENCE,
+            "early_stopping_min_delta": EARLY_STOPPING_MIN_DELTA,
+            "merge_raw_absa_for_train": MERGE_RAW_ABSA_FOR_TRAIN,
+            "use_hf_train_extra": USE_HF_TRAIN_EXTRA,
+            "hf_dataset_id": HF_DATASET_ID,
+            "hf_sample_size": HF_SAMPLE_SIZE,
+            "hf_seed": HF_SEED,
+            "merge_hard_examples": MERGE_HARD_EXAMPLES,
+            "leakage_guard_enabled": LEAKAGE_GUARD_ENABLED,
+            "confidence_fallback_enabled": CONFIDENCE_FALLBACK_ENABLED,
+            "confidence_threshold": CONFIDENCE_THRESHOLD,
+            "confidence_fallback_label": CONFIDENCE_FALLBACK_LABEL,
+        },
+        "best_val_macro_f1": float(best_f1),
+        "epochs_ran": len(history),
+        "epoch_history": history,
+    }
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=True, indent=2)
+    print(f"Experiment artifact saved: {path}")
+
+
 def main():
     set_seed(RANDOM_SEED)
     cuda_ok = torch.cuda.is_available()
@@ -98,6 +156,7 @@ def main():
         HF_SEED,
         hard_path=HARD_EXAMPLES_PATH,
         merge_hard=MERGE_HARD_EXAMPLES,
+        leakage_guard=LEAKAGE_GUARD_ENABLED,
     )
     print(f"Training sentences: {len(train_df)} | Validation: {len(val_df)}")
 
@@ -132,7 +191,7 @@ def main():
         scaler = GradScaler()
 
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-    best_f1 = fit(
+    best_f1, history = fit(
         model,
         train_loader=train_loader,
         val_loader=val_loader,
@@ -152,6 +211,16 @@ def main():
 
     if os.path.isfile(MODEL_PATH):
         model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+
+    _save_experiment_artifact(
+        path=EXPERIMENT_ARTIFACT_PATH,
+        best_f1=best_f1,
+        history=history,
+        train_size=len(train_df),
+        val_size=len(val_df),
+        device=str(device),
+        use_amp=use_amp,
+    )
 
     print(f"Training completed. Best val macro_f1: {best_f1:.4f}")
 

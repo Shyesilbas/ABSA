@@ -58,7 +58,7 @@ Sistemi bir "fabrika hattı" gibi düşünebilirsiniz:
 | Klasör / Yol | Ne tutar? | Kim kullanır? |
 |---|---|---|
 | `data/` | Veri dosyaları (ham, eğitim, test, örnek girişler) | Veri ve model ekipleri |
-| `data/outputs/` | Tahmin sonuçları, grafikler, confusion matrix | Analiz ve raporlama ekipleri |
+| `data/outputs/<run_name>/` | Koşu bazlı tahmin sonuçları, grafikler, metrik raporları | Analiz ve raporlama ekipleri |
 | `models/` | Eğitilen model dosyası | API ve tahmin süreçleri |
 | `src/` | Projenin ana Python kodu | Geliştiriciler |
 | `backend/` | API servisi | Entegrasyon ekipleri |
@@ -136,10 +136,16 @@ Sistemi bir "fabrika hattı" gibi düşünebilirsiniz:
 
 - `src/evaluate_metrics.py`
   - Test verisinde model performansını ölçer.
-  - Sınıflandırma raporu ve confusion matrix üretir.
+  - Sınıflandırma raporu, confusion matrix ve hata analizi CSV'leri üretir.
 
 - `src/visualize_results.py`
   - Toplu tahmin sonuçlarını grafik haline getirir.
+
+- `src/baseline_eval.py`
+  - Majority + TF-IDF + BERT karşılaştırmasını aynı test setinde üretir.
+
+- `src/ablation_plan.py`
+  - Ablation koşu matrisini (`ablation_plan.csv`) üretir.
 
 ### Servis katmanı
 
@@ -178,12 +184,21 @@ Notlar:
 
 ## 6) Çıktılar Nerede ve Ne İfade Ediyor?
 
+Not: `run_name`, `src/config.py` içindeki `OUTPUT_RUN_NAME` (veya ortam değişkeni `OUTPUT_RUN_NAME`) ile belirlenir.
+
 | Çıktı | Nerede oluşur? | Anlamı |
 |---|---|---|
 | Eğitilmiş model | `models/sentence_best_model.bin` | Tahmin yapacak asıl model dosyası |
-| Batch tahmin sonucu | `data/outputs/sentiment_batch_results.csv` | Her metin için etiket + güven skoru |
-| Confusion matrix | `data/outputs/confusion_matrix.png` | Hangi sınıflar karışıyor görseli |
-| Duygu dağılımı grafiği | `data/outputs/chart_sentiment_distribution.png` | Toplam olumlu/nötr/olumsuz sayıları |
+| Deney özeti | `data/outputs/<run_name>/experiment_last_run.json` | Son eğitimin config + epoch metrik özeti |
+| Baseline kıyas özeti | `data/outputs/<run_name>/baseline_comparison.csv` | Majority / TF-IDF / BERT karşılaştırması |
+| Baseline sınıf raporu | `data/outputs/<run_name>/baseline_class_reports.csv` | Model bazlı sınıf metrikleri |
+| Batch tahmin sonucu | `data/outputs/<run_name>/sentiment_batch_results.csv` | Her metin için etiket + güven skoru |
+| Confusion matrix | `data/outputs/<run_name>/confusion_matrix.png` | Hangi sınıflar karışıyor görseli |
+| Hata örnekleri | `data/outputs/<run_name>/test_misclassified.csv` | Yanlış tahmin edilen satırlar |
+| Hata çiftleri | `data/outputs/<run_name>/test_confusion_pairs.csv` | En çok karışan sınıf çiftleri |
+| Leakage raporu | `data/outputs/<run_name>/leakage_report.json` | Split çakışma kontrol raporu |
+| Ablation planı | `data/outputs/<run_name>/ablation_plan.csv` | Koşu kombinasyon listesi |
+| Duygu dağılımı grafiği | `data/outputs/<run_name>/chart_sentiment_distribution.png` | Toplam olumlu/nötr/olumsuz sayıları |
 
 ---
 
@@ -233,19 +248,24 @@ Notlar:
      - Test dataset: `SentenceClassificationDataset`
      - Tahmin toplama: `collect_predictions()`
      - Rapor/CM: `classification_report`, `plot_cm()`
-   - Çıktı: `data/outputs/confusion_matrix.png`
+     - Hata analizi: `test_misclassified.csv`, `test_confusion_pairs.csv`
+   - Çıktılar: `data/outputs/<run_name>/...`
 
-7. Tahmin servislerini çalıştır.
+7. Baseline karşılaştırma üret.
+   - Dosya: `src/baseline_eval.py`
+   - Çıktılar: `baseline_comparison.csv`, `baseline_class_reports.csv`
+
+8. Tahmin servislerini çalıştır.
    - Tekli tahmin:
      - Dosya: `src/predict.py`
      - İşlev: `src/model_utils.py > load_classifier(), predict_sentence()`
    - Toplu tahmin:
      - Dosya: `src/batch_predict.py`
      - İşlev: `process_batch()`
-     - Çıktı: `data/outputs/sentiment_batch_results.csv`
+     - Çıktı: `data/outputs/<run_name>/sentiment_batch_results.csv`
    - Görselleştirme:
      - Dosya: `src/visualize_results.py`
-     - Çıktı: `data/outputs/chart_sentiment_distribution.png`
+     - Çıktı: `data/outputs/<run_name>/chart_sentiment_distribution.png`
 
 
 ### Senaryo B: Sadece hazır modelle tahmin yapmak isteyen ekip

@@ -2,8 +2,8 @@ import os
 import pandas as pd
 
 from config import SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH, OUTPUTS_DIR
-from progress import track
-from model_utils import load_classifier, predict_sentence_with_meta
+from core.progress import track
+from model.inference import load_classifier, predict_sentence_with_meta
 
 
 def read_file_smart(filepath):

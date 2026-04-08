@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from config import BATCH_RESULTS_PATH, OUTPUTS_DIR
+from config import (
+    BATCH_RESULTS_PATH,
+    OUTPUTS_DIR,
+    BATCH_TOPIC_TITLE,
+    BATCH_TOPIC_KEYWORDS,
+)
 
 
 def main():
@@ -37,7 +42,9 @@ def main():
         palette=colors,
         order=[o for o in order if o in set(df["sentiment"].unique())],
     )
-    plt.title(f"Sentiment distribution (n={len(df)})", fontsize=14, fontweight="bold")
+    keyword_text = ", ".join(BATCH_TOPIC_KEYWORDS)
+    plt.title(f"Sentiment distribution | {BATCH_TOPIC_TITLE} (n={len(df)})", fontsize=13, fontweight="bold")
+    plt.suptitle(f"Keywords: {keyword_text}", fontsize=10, y=0.98)
     plt.xlabel("Class")
     plt.ylabel("Count")
 
@@ -55,7 +62,7 @@ def main():
             )
 
     out = os.path.join(OUTPUTS_DIR, "chart_sentiment_distribution.png")
-    plt.tight_layout()
+    plt.tight_layout(rect=(0, 0, 1, 0.95))
     plt.savefig(out, dpi=300)
     plt.close()
     print(f"Chart saved: {out}")
