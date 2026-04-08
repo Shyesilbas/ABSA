@@ -1,17 +1,18 @@
 import os
-import matplotlib
 
-matplotlib.use("Agg")
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from config import (
+from core.config import (
     BATCH_RESULTS_PATH,
-    OUTPUTS_DIR,
-    BATCH_TOPIC_TITLE,
     BATCH_TOPIC_KEYWORDS,
+    BATCH_TOPIC_TITLE,
+    OUTPUTS_DIR,
 )
+
+matplotlib.use("Agg")
 
 
 def main():

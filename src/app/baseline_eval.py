@@ -12,14 +12,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, f1_score
 from torch.utils.data import DataLoader
 
-from config import (
-    TRAIN_DATA_PATH,
-    TEST_DATA_PATH,
-    OUTPUTS_DIR,
-    CLASS_NAMES,
-    BATCH_SIZE,
-    MAX_LEN,
-)
+from core.config import BATCH_SIZE, CLASS_NAMES, MAX_LEN, OUTPUTS_DIR, TEST_DATA_PATH, TRAIN_DATA_PATH
 from core.progress import loader_total, track
 from data.contracts import prepare_sentence_polarity_frame
 from data.dataset_loader import SentenceClassificationDataset

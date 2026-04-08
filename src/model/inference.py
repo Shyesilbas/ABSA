@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple
 import torch
 import torch.nn.functional as F
 
-from config import (
+from core.config import (
     CLASS_NAMES,
     CONFIDENCE_FALLBACK_ENABLED,
     CONFIDENCE_FALLBACK_LABEL,

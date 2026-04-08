@@ -1,7 +1,6 @@
 import os
-import matplotlib
 
-matplotlib.use("Agg")
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -10,19 +9,21 @@ import torch
 from sklearn.metrics import classification_report, confusion_matrix
 from torch.utils.data import DataLoader
 
-from config import (
-    MODEL_NAME,
-    MAX_LEN,
+from core.config import (
     CLASS_NAMES,
-    MODEL_PATH,
-    TEST_DATA_PATH,
-    OUTPUTS_DIR,
-    MISCLASSIFIED_REPORT_PATH,
     CONFUSION_PAIRS_REPORT_PATH,
+    MAX_LEN,
+    MISCLASSIFIED_REPORT_PATH,
+    MODEL_NAME,
+    MODEL_PATH,
+    OUTPUTS_DIR,
+    TEST_DATA_PATH,
 )
 from core.progress import loader_total, track
 from data.dataset_loader import SentenceClassificationDataset
 from model.loader import load_finetuned_resources
+
+matplotlib.use("Agg")
 
 
 @torch.no_grad()

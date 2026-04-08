@@ -1,6 +1,7 @@
 from model.inference import load_classifier, predict_sentence_with_meta
 
-if __name__ == "__main__":
+
+def main() -> None:
     model, tokenizer, device = load_classifier()
 
     print("-" * 50)
@@ -19,3 +20,7 @@ if __name__ == "__main__":
             f"Prediction: {label}{fallback_note}  raw={meta['raw_label']}  "
             f"confidence={meta['confidence']:.4f}  probabilities: {[round(p, 4) for p in probs]}"
         )
+
+
+if __name__ == "__main__":
+    main()

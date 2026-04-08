@@ -12,48 +12,48 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
 
-try:
-    from torch.cuda.amp import GradScaler
-except ImportError:
-    GradScaler = None  # type: ignore[misc, assignment]
-
-from config import (
-    MODEL_NAME,
-    MAX_LEN,
+from core.config import (
     BATCH_SIZE,
-    EPOCHS,
-    LEARNING_RATE,
-    TRAIN_DATA_PATH,
-    VAL_DATA_PATH,
-    RAW_DATA_PATH,
-    MODEL_PATH,
     CLASS_NAMES,
-    RANDOM_SEED,
-    USE_CLASS_WEIGHTS,
-    NEUTRAL_CLASS_INDEX,
-    NEUTRAL_LOSS_BOOST,
-    EARLY_STOPPING,
-    EARLY_STOPPING_PATIENCE,
-    EARLY_STOPPING_MIN_DELTA,
-    USE_AMP,
-    WARMUP_RATIO,
+    CONFIDENCE_FALLBACK_ENABLED,
+    CONFIDENCE_FALLBACK_LABEL,
+    CONFIDENCE_THRESHOLD,
     DATALOADER_NUM_WORKERS,
-    MERGE_RAW_ABSA_FOR_TRAIN,
-    USE_HF_TRAIN_EXTRA,
+    EARLY_STOPPING,
+    EARLY_STOPPING_MIN_DELTA,
+    EARLY_STOPPING_PATIENCE,
+    EPOCHS,
+    EXPERIMENT_ARTIFACT_PATH,
+    HARD_EXAMPLES_PATH,
     HF_DATASET_ID,
     HF_SAMPLE_SIZE,
     HF_SEED,
-    HARD_EXAMPLES_PATH,
-    MERGE_HARD_EXAMPLES,
     LEAKAGE_GUARD_ENABLED,
-    EXPERIMENT_ARTIFACT_PATH,
-    CONFIDENCE_FALLBACK_ENABLED,
-    CONFIDENCE_THRESHOLD,
-    CONFIDENCE_FALLBACK_LABEL,
+    LEARNING_RATE,
+    MAX_LEN,
+    MERGE_HARD_EXAMPLES,
+    MERGE_RAW_ABSA_FOR_TRAIN,
+    MODEL_NAME,
+    MODEL_PATH,
+    NEUTRAL_CLASS_INDEX,
+    NEUTRAL_LOSS_BOOST,
+    RANDOM_SEED,
+    RAW_DATA_PATH,
+    TRAIN_DATA_PATH,
+    USE_AMP,
+    USE_CLASS_WEIGHTS,
+    USE_HF_TRAIN_EXTRA,
+    VAL_DATA_PATH,
+    WARMUP_RATIO,
 )
 from data.dataset_loader import SentenceClassificationDataset
 from data.training_data import build_train_val_frames
 from model.trainer import build_loss_fn, fit
+
+try:
+    from torch.cuda.amp import GradScaler
+except ImportError:
+    GradScaler = None  # type: ignore[misc, assignment]
 
 
 def set_seed(seed: int) -> None:

@@ -7,15 +7,12 @@ OUTPUTS_ROOT_DIR = os.path.join(DATA_DIR, "outputs")
 OUTPUT_RUN_NAME = os.getenv("OUTPUT_RUN_NAME", "run_default")
 OUTPUTS_DIR = os.path.join(OUTPUTS_ROOT_DIR, OUTPUT_RUN_NAME)
 
-# Raw dataset output
 RAW_DATA_PATH = os.path.join(DATA_DIR, "turkish_absa_train.csv")
 
-# Processed sentence-level CSVs (Sentence, Polarity)
 TRAIN_DATA_PATH = os.path.join(DATA_DIR, "train.csv")
 VAL_DATA_PATH = os.path.join(DATA_DIR, "val.csv")
 TEST_DATA_PATH = os.path.join(DATA_DIR, "test.csv")
 
-# Batch prediction
 SAMPLE_TEXTS_PATH = os.path.join(DATA_DIR, "sample_tweets.csv")
 BATCH_RESULTS_PATH = os.path.join(OUTPUTS_DIR, "sentiment_batch_results.csv")
 BASELINE_COMPARISON_PATH = os.path.join(OUTPUTS_DIR, "baseline_comparison.csv")
@@ -26,10 +23,9 @@ BATCH_TOPIC_KEYWORDS = [
     "indirim",
     "iade",
     "stok",
-    "müşteri hizmetleri",
+    "musteri hizmetleri",
 ]
 
-# Model
 MODEL_NAME = "dbmdz/bert-base-turkish-cased"
 MODEL_PATH = os.path.join(MODELS_DIR, "sentence_best_model.bin")
 
@@ -52,23 +48,19 @@ USE_AMP = True
 WARMUP_RATIO = 0.1
 DATALOADER_NUM_WORKERS = 2
 
-# Training pool expansion
 MERGE_RAW_ABSA_FOR_TRAIN = True
 USE_HF_TRAIN_EXTRA = True
 HF_DATASET_ID = "winvoker/turkish-sentiment-analysis-dataset"
 HF_SAMPLE_SIZE = 10_000
 HF_SEED = 42
 
-# Manually curated hard examples override duplicate sentences
 HARD_EXAMPLES_PATH = os.path.join(DATA_DIR, "hard_examples.csv")
 MERGE_HARD_EXAMPLES = True
 
-# Inference confidence policy
 CONFIDENCE_FALLBACK_ENABLED = True
 CONFIDENCE_THRESHOLD = 0.70
 CONFIDENCE_FALLBACK_LABEL = "Neutral"
 
-# Quality and experiment artifacts
 LEAKAGE_GUARD_ENABLED = True
 LEAKAGE_REPORT_PATH = os.path.join(OUTPUTS_DIR, "leakage_report.json")
 MISCLASSIFIED_REPORT_PATH = os.path.join(OUTPUTS_DIR, "test_misclassified.csv")

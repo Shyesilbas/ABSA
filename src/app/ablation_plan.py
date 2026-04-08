@@ -5,7 +5,7 @@ import os
 
 import pandas as pd
 
-from config import ABLATION_REPORT_PATH
+from core.config import ABLATION_REPORT_PATH
 
 
 def build_plan() -> pd.DataFrame:

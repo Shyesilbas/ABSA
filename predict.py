@@ -8,4 +8,4 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
-runpy.run_path(str(SRC / "predict.py"), run_name="__main__")
+runpy.run_path(str(SRC / "app" / "predict.py"), run_name="__main__")

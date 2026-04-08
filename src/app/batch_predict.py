@@ -1,7 +1,8 @@
 import os
+
 import pandas as pd
 
-from config import SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH, OUTPUTS_DIR
+from core.config import BATCH_RESULTS_PATH, OUTPUTS_DIR, SAMPLE_TEXTS_PATH
 from core.progress import track
 from model.inference import load_classifier, predict_sentence_with_meta
 
@@ -73,6 +74,10 @@ def process_batch(input_file, output_file):
     print(f"Confidence fallback applied: {fallback_count}/{len(results)}")
 
 
-if __name__ == "__main__":
+def main() -> None:
     os.makedirs(OUTPUTS_DIR, exist_ok=True)
     process_batch(SAMPLE_TEXTS_PATH, BATCH_RESULTS_PATH)
+
+
+if __name__ == "__main__":
+    main()
