@@ -16,7 +16,7 @@ from core.config import BATCH_SIZE, CLASS_NAMES, MAX_LEN, OUTPUTS_DIR, TEST_DATA
 from core.progress import loader_total, track
 from data.contracts import prepare_sentence_polarity_frame
 from data.dataset_loader import SentenceClassificationDataset
-from model.inference import load_classifier
+from model.inference import load_classifier, logits_to_final_class_ids
 
 
 @dataclass
@@ -90,7 +90,7 @@ def run_bert_model(x_test: pd.DataFrame) -> np.ndarray:
         ids = batch["input_ids"].to(device, non_blocking=True)
         mask = batch["attention_mask"].to(device, non_blocking=True)
         logits = model(input_ids=ids, attention_mask=mask).logits
-        preds.extend(logits.argmax(dim=-1).cpu().tolist())
+        preds.extend(logits_to_final_class_ids(logits).cpu().tolist())
     return np.asarray(preds, dtype=np.int64)
 
 

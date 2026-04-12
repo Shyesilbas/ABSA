@@ -62,7 +62,7 @@ Sistemi bir "fabrika hattı" gibi düşünebilirsiniz:
 | `models/` | Eğitilen model dosyası | API ve tahmin süreçleri |
 | `src/` | Projenin ana Python kodu | Geliştiriciler |
 | `backend/` | API servisi | Entegrasyon ekipleri |
-| `frontend/` | Basit web arayüzü (varsa) | Demo/kullanıcı tarafı |
+| `frontend/` | Vite + React demo arayüzü | Demo; geliştirmede API için Vite proxy (`/api`) |
 | `scripts/` | Yardımcı çalışma dosyaları (Colab vb.) | Geliştiriciler |
 
 ---
@@ -144,15 +144,43 @@ Sistemi bir "fabrika hattı" gibi düşünebilirsiniz:
 - `src/baseline_eval.py`
   - Majority + TF-IDF + BERT karşılaştırmasını aynı test setinde üretir.
 
-- `src/ablation_plan.py`
-  - Ablation koşu matrisini (`ablation_plan.csv`) üretir.
+- `src/app/ablation_plan.py`
+  - Sekiz satırlık 2³ ablation matrisini (`ablation_plan.csv`) üretir (rapor §7.5 ile uyumlu).
 
 ### Servis katmanı
 
-- `backend/main.py`
-  - API servisidir.
-  - Uygulama açılırken modeli belleğe alır.
-  - Sağlık kontrol ve tahmin uçları sunar.
+- `backend/main.py` — FastAPI uygulaması; CORS ve yaşam döngüsünde model yükleme.
+- `backend/state.py` — Bellekte tek model örneği ve olası yükleme hatası.
+- `backend/api.py` — Son kullanıcıya açık HTTP uçları (tahmin, grafik, meta).
+- `backend/schemas.py` — İstek/yanıt şemaları ve toplu istek üst sınırları.
+
+#### HTTP API: kim ne yapıyor?
+
+Bu uçlar **eğitim, test seti metrikleri veya baseline** çalıştırmaz; yalnızca üretim modeliyle tahmin ve raporlama içindir. Eğitim ve akademik değerlendirme için `src/app/train.py`, `src/app/evaluate_metrics.py`, `src/app/baseline_eval.py` gibi scriptler kullanılır (API üzerinden açılmaz).
+
+| Uç | Yöntem | Ne işe yarar? |
+|---|---|---|
+| `/health` | GET | Servis ayakta mı, model belleğe yüklendi mi (veya hata özeti). |
+| `/meta` | GET | Model adı, sınıf listesi, güven eşiği ve fallback ayarları (model yokken bile). |
+| `/predict` | POST | Tek metin → duygu, olasılıklar, ham etiket, fallback bilgisi. |
+| `/predict/batch` | POST | En fazla 500 metin → satır başı tahmin listesi (`id`, `text`, `sentiment`, …). |
+| `/predict/batch/upload` | POST (multipart/form-data) | CSV dosya yükleme ile toplu tahmin; `topic_title` ve `keywords_subtitle` ile birlikte istatistik özeti döner. |
+| `/visualize/distribution` | POST | Ham `texts[]` veya hazır `rows[{sentiment}]` → duygu dağılımı **PNG** (CLI’daki `visualize_results` ile aynı grafik mantığı). |
+| `/visualize/distribution/stats` | POST | Aynı gövde → sınıf sayımları **JSON** (grafik çizmeden özet). |
+
+`/predict/batch/upload` notları:
+- Dosya sadece `.csv` olmalıdır.
+- Dosya boyutu üst sınırı: `1 MB`.
+- Satır limiti: `500`.
+- Metin kolonu için kabul edilen başlıklar: `text`, `tweet`, `tweets`, `content`, `metin`, `sentence`, `yorum`, `review`, `message`.
+
+İstek gövdeleri ve örnekler için yerleşik OpenAPI arayüzü: uygulama açıkken `/docs`.
+
+#### Web arayüzü (`frontend/`)
+
+- **Tekil / toplu tahmin** ve **duygu dağılımı** (istatistik + PNG) bu arayüzden backend’e bağlanır.
+- Geliştirme sırasında tarayıcı `frontend` Vite sunucusundan açılır; API çağrıları `/api` yoluna gider ve Vite **proxy** ile `http://127.0.0.1:8000` altındaki FastAPI’ye iletilir (CORS ile uğraşmadan).
+- Paket tanımı: `frontend/package.json`. Üretim derlemesinde veya proxy kullanmadığınız ortamda `frontend/.env` içinde `VITE_API_BASE_URL` ile backend kök URL’sini verin (sonunda `/` olmadan).
 
 ### Yardımcı dosyalar
 
@@ -197,7 +225,7 @@ Not: `run_name`, `src/config.py` içindeki `OUTPUT_RUN_NAME` (veya ortam değiş
 | Hata örnekleri | `data/outputs/<run_name>/test_misclassified.csv` | Yanlış tahmin edilen satırlar |
 | Hata çiftleri | `data/outputs/<run_name>/test_confusion_pairs.csv` | En çok karışan sınıf çiftleri |
 | Leakage raporu | `data/outputs/<run_name>/leakage_report.json` | Split çakışma kontrol raporu |
-| Ablation planı | `data/outputs/<run_name>/ablation_plan.csv` | Koşu kombinasyon listesi |
+| Ablation planı | `data/outputs/<run_name>/ablation_plan.csv` | `abl_01`–`abl_08` koşu listesi |
 | Duygu dağılımı grafiği | `data/outputs/<run_name>/chart_sentiment_distribution.png` | Toplam olumlu/nötr/olumsuz sayıları |
 
 ---

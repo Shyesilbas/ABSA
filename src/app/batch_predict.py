@@ -7,6 +7,30 @@ from core.progress import track
 from model.inference import load_classifier, predict_sentence_with_meta
 
 
+def predict_batch_entries(model, tokenizer, device, entries: list[dict]) -> list[dict]:
+    """API veya programatik batch: her kayıt `text` ve isteğe bağlı `id` içerir."""
+    results: list[dict] = []
+    for i, entry in enumerate(entries):
+        text = entry.get("text")
+        rid = entry.get("id", i)
+        if not isinstance(text, str) or len(text.strip()) < 2:
+            continue
+        label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, text)
+        conf = float(meta["confidence"])
+        fallback_applied = bool(meta["fallback_applied"])
+        results.append(
+            {
+                "id": rid,
+                "text": text,
+                "sentiment": label,
+                "raw_sentiment": meta["raw_label"],
+                "fallback_applied": fallback_applied,
+                "confidence": round(conf, 4),
+            }
+        )
+    return results
+
+
 def read_file_smart(filepath):
     try:
         df = pd.read_csv(filepath, sep=";")

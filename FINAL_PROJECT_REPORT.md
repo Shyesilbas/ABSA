@@ -1,333 +1,614 @@
-# **TURKISH SENTENCE-LEVEL SENTIMENT ANALYSIS**
+# Final Project Report
 
-## **(BERTurk Tabanlı Duygu Sınıflandırma Sistemi)**
+## Title
 
-### **Bitirme Projesi Tam Rapor Metni**
+**BERTurk-Based Sentence-Level Sentiment Analysis for Turkish: From Reproducible Training to API-Driven Deployment**
 
-**Öğrenci:** Serhat Haydar Yeşilbaş - Ahmet Emir Solak - Yasin Eren Şahin  
-**Üniversite:** Maltepe Üniversitesi  
-**Ders/Çalışma Türü:** Kapsamlı Teknik Bitirme Projesi  
-**Proje Türü:** Türkçe Cümle Düzeyi Duygu Analizi  
-**Model:** `dbmdz/bert-base-turkish-cased` (fine-tuned)  
-**Sınıflar:** Negative / Neutral / Positive
+## Status Summary
 
----
+| Section | Status | Note |
+| --- | --- | --- |
+| Title | Completed | Final title is set. |
+| Abstract | Completed | Academic abstract is drafted. |
+| 1. Introduction | Completed | Aligned with current sentence-level scope. |
+| 2. Problem Definition and Scope | Completed | Scope boundaries and evolution note are added. |
+| 3. Related Work | Completed | Literature synthesis and thesis positioning are written. |
+| 4. Dataset and Preprocessing | Completed | Data sources, split, and tokenization are documented. |
+| 5. Model Architecture and Methodology | Completed | BERTurk setup and final input representation are clarified. |
+| 6. Experimental Setup | Completed | Strategy, hyperparameters, and technologies are documented. |
+| 7. Results | Completed | §7.5 sekiz ablation satırı tamam; tablo + çıkarım özeti güncellendi. |
+| 8. Discussion | Completed | Main findings, error taxonomy, limitations, deployment implications, and roadmap drafted. |
+| 9. Conclusion | Completed | Closing synthesis of problem, method, outcomes, and contribution. |
+| References | Completed | APA-style bibliography with URLs and access dates. |
+| Appendix | Completed | A–B unchanged; C (10 error cases) and D (scope evolution) filled. |
 
-## **Etik Beyan**
+## Abstract (Completed)
 
-Bu raporda sunulan çalışma, akademik etik kurallarına uygun şekilde yürütülmüştür. Kullanılan yöntemler, veri kaynakları, modelleme tercihleri ve sonuçlar şeffaf biçimde raporlanmıştır.
+Automated sentiment analysis for Turkish short text is valuable for review triage, social listening, and support-ticket pre-labeling, yet practical deployment requires both robust modeling and reproducible engineering. This project presents an end-to-end sentence-level system that classifies Turkish text into three polarity labels: Negative, Neutral, and Positive. The core classifier is built by supervised fine-tuning of BERTurk (`dbmdz/bert-base-turkish-cased`) on a normalized sentence-polarity data schema with deduplication and leakage-aware train/validation/test usage. The training pipeline integrates class-weighted optimization, mixed-precision support, learning-rate warmup, early stopping, and checkpointing, while optional data enrichment from external and hard-example sources is incorporated through controlled merging rules. Evaluation combines class-wise reports, confusion analysis, and baseline comparisons against majority and TF-IDF-based methods, and shows strong gains for the fine-tuned transformer setup. To bridge offline experiments and real usage, the project also provides a FastAPI service and a React + Vite client for single/batch inference, CSV-based batch upload, and sentiment distribution visualization. A confidence-threshold fallback mechanism further improves reliability in low-certainty cases by reducing overconfident errors.
 
----
+## 1. Introduction (Completed)
 
-## **Özet**
+Short, user-generated Turkish text is continuously produced in e-commerce, social media, and customer-support channels. Converting these texts into reliable sentiment signals can improve decision speed and consistency in operational workflows. However, Turkish morphology, informal language, and domain-specific phrasing make this task challenging, especially when systems are expected to be reproducible, testable, and deployment-ready rather than notebook-only prototypes.
 
-Bu projede, Türkçe metinler için cümle düzeyinde duygu analizi gerçekleştiren uçtan uca bir sistem geliştirilmiştir. Çalışmanın ana amacı, bir cümleyi `Negative`, `Neutral` veya `Positive` sınıfına yüksek doğrulukla atayabilen, yeniden üretilebilir ve raporlanabilir bir model hattı kurmaktır.
+This report addresses sentence-level Turkish sentiment classification with a transformer-centered approach and a full software pipeline. On the modeling side, the study fine-tunes a Turkish BERT checkpoint, standardizes heterogeneous raw inputs into a shared data contract, applies deduplication with majority-label resolution, and supports optional multi-source training expansion. On the evaluation side, the project reports both aggregate and class-wise metrics, confusion patterns, and baseline comparisons to verify that gains are meaningful rather than incidental.
 
-Ana model olarak BERTurk (`dbmdz/bert-base-turkish-cased`) seçilmiş, model fine-tuning ile görev özelinde eğitilmiştir. Veri tarafında standartlaştırma, tekilleştirme, sınıf dengesizliği yönetimi, hard example birleştirme ve isteğe bağlı dış veri genişletme uygulanmıştır. Eğitim sürecinde early stopping, class weights, checkpoint kaydı ve terminal bazlı ilerleme izleme özellikleri kullanılmıştır.
+Beyond model training, the work emphasizes practical usability. A FastAPI backend exposes health, metadata, single prediction, batch prediction, CSV upload, and distribution visualization endpoints; a React + Vite frontend demonstrates interactive usage for non-expert users. Inference includes a confidence-aware fallback policy that maps low-certainty outputs to a safer neutral decision when configured. Together, these components provide a reproducible baseline for Turkish sentiment analysis and a clear path from training artifacts to an operational demo environment.
 
-Model performansı yalnızca ana metriklerle değil, baseline karşılaştırmasıyla da doğrulanmıştır. Test sonuçlarında fine-tuned BERT modeli, hem majority baseline hem de TF-IDF + Logistic Regression yaklaşımını belirgin farkla geçmiştir. Ek olarak inference tarafında düşük güvenli tahminler için confidence fallback politikası eklenmiş, belirsiz cümlelerde aşırı güvenli yanlış tahmin riski azaltılmıştır.
+## 2. Problem Definition and Scope (Completed)
 
-**Anahtar Kelimeler:** Türkçe NLP, duygu analizi, BERTurk, metin sınıflandırma, baseline karşılaştırması, confidence fallback
+This project focuses on **sentence-level Turkish sentiment classification** with three labels: **Negative (0)**, **Neutral (1)**, and **Positive (2)**. The primary research question is whether a fine-tuned Turkish BERT model can provide strong and reproducible performance under a practical engineering pipeline.
 
----
+### In Scope
 
-## **Abstract**
+- Single-label, sentence-level polarity classification.
+- Controlled train/validation/test workflow and reproducible experiment artifacts.
+- Baseline comparison (majority, TF-IDF-based methods, and transformer model).
+- Production-style inference through API and web demo, including batch usage and visualization.
 
-This project presents an end-to-end sentence-level sentiment analysis system for Turkish text. The goal is to classify each sentence into `Negative`, `Neutral`, or `Positive` with high reliability and reproducibility.
+### Out of Scope
 
-The main model is fine-tuned BERTurk (`dbmdz/bert-base-turkish-cased`). The pipeline includes data standardization, deduplication, class imbalance handling, hard-example merging, and optional external data augmentation. Training uses early stopping, class weighting, checkpointing, and terminal progress monitoring.
+- Aspect-level prediction at inference time.
+- Multi-label sentiment classification.
+- Cross-lingual generalization.
 
-The model is evaluated not only by standard metrics but also via baseline comparison. On the test set, the fine-tuned BERT model significantly outperforms both majority-class and TF-IDF + Logistic Regression baselines. Additionally, a confidence fallback policy is integrated for low-confidence predictions to reduce overconfident errors.
+### Project Evolution Note (Important)
 
-**Keywords:** Turkish NLP, sentiment analysis, BERTurk, text classification, baseline comparison, confidence fallback
+The early phase explored ABSA-style data sources and representations. In the final system, the scope is intentionally narrowed to sentence-level sentiment analysis. Aspect fields are treated as optional preprocessing context and are not used as runtime model inputs in the final inference pipeline.
 
----
+## 3. Related Work (Completed)
 
-## **1. Giriş**
+### 3.1 From Lexicon and Classical ML to Contextual Models (Completed)
 
-Dijital platformlarda üretilen kullanıcı metinleri; marka yönetimi, müşteri deneyimi, kriz takibi ve ürün geliştirme açısından kritik içgörü kaynağıdır. Ancak bu metinlerin manuel analizi maliyetli ve ölçeklenemezdir. Duygu analizi bu noktada otomatik sınıflandırma ile karar süreçlerini hızlandırır.
+Early sentiment-analysis systems were dominated by lexicon-driven polarity scoring and bag-of-words style features. These approaches are computationally efficient and interpretable, and they remain useful as baseline references in low-resource settings. Classical supervised models such as SVM and Logistic Regression with TF-IDF representations improved robustness over purely rule-based systems, especially when domain-specific labeled data was available. However, their core limitation is contextual blindness: token counts and sparse vectors cannot reliably encode scope, contrast, compositional meaning, or long-distance dependencies in complex sentences.
 
-Türkçe, eklemeli yapısı ve bağlam bağımlılığı nedeniyle NLP görevlerinde özel zorluklar barındırır. Bu çalışmada amaç, Türkçe cümle düzeyi duygu analizinde modern transformer yaklaşımı ile yüksek doğruluklu ve pratikte kullanılabilir bir sistem geliştirmektir.
+### 3.2 Deep Learning and Transformer Transition (Completed)
 
----
+Deep learning shifted sentiment analysis toward dense contextual representations. RNN/LSTM and BiLSTM architectures improved sequential modeling and outperformed many sparse-feature baselines, yet they still faced optimization and efficiency bottlenecks for longer contexts. The Transformer architecture addressed these constraints through self-attention and parallelizable computation, enabling stronger contextual encoding at scale. BERT-style pretraining further accelerated downstream progress by separating large-scale language representation learning from task-specific fine-tuning, which became the dominant paradigm for classification tasks.
 
-## **2. Problem Tanımı ve Kapsam**
+### 3.3 Turkish NLP and BERTurk (Completed)
 
-### **2.1 Problem**
+Turkish presents additional NLP challenges due to rich morphology, agglutination, and productive suffixation, all of which increase lexical variation and ambiguity. In this context, language-specific pretrained models are often more effective than generic multilingual checkpoints because they better internalize Turkish morphology and usage patterns. BERTurk (`dbmdz/bert-base-turkish-cased`) is therefore a natural backbone choice for this thesis, as it combines Transformer-level contextual power with Turkish-specialized pretraining.
 
-Verilen bir Türkçe cümlenin duygu etiketini belirlemek:
+### 3.4 Related Work Positioning of This Thesis (Completed)
 
-- `0 -> Negative`
-- `1 -> Neutral`
-- `2 -> Positive`
+Relative to prior work, this thesis intentionally prioritizes **sentence-level** Turkish sentiment classification rather than full runtime ABSA extraction/classification. The contribution is not only model-centric but also system-centric: a reproducible training/evaluation pipeline, baseline benchmarking, structured confusion/error analysis, and deployable inference interfaces (API + frontend demo). This positioning is important because many studies report strong model metrics without an equally transparent operational path from experiment to usable service.
 
-### **2.2 Kapsam Dahili**
+The conceptual grounding of this section follows key citation pillars: Transformer architecture, BERT pretraining/fine-tuning, BERTurk as a Turkish-specific checkpoint, foundational sentiment-analysis literature, and ABSA background for documenting project evolution. Full bibliographic entries are consolidated in the References section using a single citation style.
 
-- Cümle düzeyi tek etiketli sınıflandırma
-- Eğitim/validasyon/test ayrımı
-- Baseline karşılaştırması
-- Batch tahmin ve görsel raporlama
-- Güven odaklı inference politikası
+## 4. Dataset and Preprocessing (Completed)
 
-### **2.3 Kapsam Dışı**
+### 4.1 Data Sources
 
-- Aspect-level inference (ABSA çıktısı üretimi)
-- Çok etiketli sınıflandırma
-- Çok dilli genelleme
+The final training pipeline uses sentence-polarity formatted CSV datasets in the repository (`train.csv`, `val.csv`, `test.csv`) as the core source. In addition, the training pool can optionally be expanded with:
 
-> *Not: Proje ilk aşamada ABSA odaklı tasarlanmış olsa da güncel sürüm cümle düzeyi sentiment sınıflandırmaya evrilmiştir. Mimari buna göre sadeleştirilmiştir.*
+- a raw ABSA-oriented CSV source,
+- a sampled Hugging Face Turkish sentiment subset,
+- manually curated hard examples.
 
----
+These optional sources are merged only into training data, while validation and test sets remain fixed for fair evaluation.
 
-## **3. Literatür Özeti**
+### 4.2 Data Contract and Standardization
 
-Duygu analizi literatüründe klasik yöntemler (Bag-of-Words, TF-IDF, SVM, Naive Bayes) düşük maliyetli ve hızlıdır; fakat bağlamı sınırlı temsil eder. Derin öğrenme ile birlikte RNN/LSTM tabanlı çözümler bağlamı daha iyi modellemiştir. Transformer mimarisi ve özellikle BERT ailesi, self-attention mekanizması ile bağlamsal temsilde yeni bir standart oluşturmuştur.
+All incoming sources are normalized to a shared schema:
 
-Türkçe özelinde BERTurk modeli, dilin morfolojik yapısına uygun ön eğitim avantajı sunar. Bu nedenle proje, ana omurga olarak BERTurk’u kullanmıştır.
+- `Sentence` (text)
+- `Polarity` (0/1/2)
 
----
+During preprocessing, column harmonization, missing-value cleaning, text trimming, and label normalization are applied. Duplicate sentences are resolved with majority-label logic to improve consistency.
 
-## **4. Veri, Ön İşleme ve Veri Sözleşmesi**
+### 4.3 Split Strategy
 
-### **4.1 Veri Kaynakları**
+The workflow uses dedicated **train / validation / test** files, and test data is never used for model fitting. In optional reconstruction workflows, split generation follows stratified logic to preserve class proportions as much as possible. Final run-specific sample counts are recorded in experiment artifacts to ensure traceability.
 
-- Yerel `train.csv`, `val.csv`, `test.csv`
-- Opsiyonel ham ABSA kaynak dosyası
-- Opsiyonel Hugging Face ek eğitim verisi
-- Opsiyonel `hard_examples.csv` (zor örnekler)
+### 4.4 Class Balance and Data Quality
 
-### **4.2 Veri Sözleşmesi**
+Class imbalance is expected in Turkish sentiment data (especially the neutral class). The project addresses this through weighted loss and targeted hard-example enrichment rather than test-set manipulation. Leakage checks are applied between train and validation pools to prevent overlap-driven optimism.
 
-Modelin standart beklediği kolonlar:
+### 4.5 Tokenization and Encoding
 
-- `Sentence` (metin)
-- `Polarity` (etiket: 0/1/2)
+Text is tokenized with the BERTurk tokenizer (`dbmdz/bert-base-turkish-cased`) and converted to model inputs (`input_ids`, `attention_mask`) with fixed-length padding/truncation according to the configured maximum sequence length.
 
-### **4.3 Ön İşleme Adımları**
+### 4.6 ABSA-to-Sentence-Level Transition
 
-- Kolon adı normalize etme (`text -> Sentence`, `label -> Polarity`)
-- `Aspect` kolonu varsa kaldırma
-- Boş/NaN kayıtları temizleme
-- Metin trim işlemleri
-- Cümle bazlı tekilleştirme (çoğunluk etiketi)
-- Hard examples çakışmasında manuel etiketin baskın olması
+The initial project direction included ABSA-oriented resources, but the final thesis contribution is explicitly sentence-level sentiment classification (see Section 2 for scope rationale).
 
-### **4.4 Veri Bölünmesi**
+## 5. Model Architecture and Methodology (Completed)
 
-Veri train/val/test olarak ayrılmıştır. Test seti eğitimde kullanılmamıştır.
+### 5.1 Model Selection
 
----
+This study uses **BERTurk** (`dbmdz/bert-base-turkish-cased`), a transformer model pre-trained on large-scale Turkish text. Compared with generic multilingual alternatives, a Turkish-specialized checkpoint is preferred to better capture agglutinative morphology, suffix-driven meaning shifts, and domain-specific lexical usage in Turkish short text.
 
-## **5. Sistem Mimarisi ve Uygulama Bileşenleri**
+### 5.2 Architecture and Fine-Tuning Setup
 
-### **5.1 Genel Mimari**
+The base encoder follows the standard BERT-base configuration (12 transformer layers, 768 hidden size, 12 attention heads; approximately 110M parameters). For classification, the project uses `AutoModelForSequenceClassification` with `num_labels=3`, adding a task head for:
 
-Sistem modüler bir katman yapısıyla tasarlanmıştır:
+- Negative
+- Neutral
+- Positive
 
-1. **Veri Hazırlama Katmanı**
-2. **Model Eğitim Katmanı**
-3. **Model Yükleme & Inference Katmanı**
-4. **Değerlendirme & Raporlama Katmanı**
+Fine-tuning is performed end-to-end on sentence-level labels. The training workflow includes class-weighted loss (when enabled), learning-rate warmup, mixed-precision support, gradient clipping (global L2 norm capped at **1.0**), early stopping, and checkpointing of the best validation result.
 
-### **5.2 Ana Dosyalar ve Görevleri**
+### 5.3 Input Representation (Current Final Scope)
 
-- `config.py`: Merkezi ayarlar
-- `data_contracts.py`: Veri sözleşmesi/normalize/tekilleştirme
-- `training_data.py`: Eğitim havuzu birleştirme
-- `dataset_loader.py`: Tokenize/tensor dataset üretimi
-- `train.py`: Eğitim orkestrasyonu
-- `trainer.py`: Epoch eğitim/değerlendirme motoru
-- `model_loader.py`: Checkpoint güvenli yükleme
-- `model_utils.py`: Tahmin fonksiyonları
-- `evaluate_metrics.py`: Test metrikleri + confusion matrix
-- `batch_predict.py`: Toplu tahmin
-- `progress.py`: Terminal yüzde/progress altyapısı
-- `baseline_eval.py`: Baseline karşılaştırma
-- `ablation_plan.py`: Ablation plan matrisi üretimi
+In the final system, model input is **single-sentence sentiment classification**, not aspect-conditioned inference. Each sample is tokenized from sentence text only and encoded as BERT-compatible tensors (`input_ids`, `attention_mask`) with fixed-length padding/truncation according to the configured maximum sequence length.
 
----
+### 5.4 Note on ABSA-Era Design
 
-## **6. Modelleme Yaklaşımı**
+An earlier phase explored ABSA-style resources; however, the final system uses sentence-level polarity prediction only. ABSA pair formatting is not used in the final runtime pipeline.
 
-### **6.1 Ana Model**
+## 6. Experimental Setup (Completed)
+
+### 6.1 Training Strategy
+
+To make transformer fine-tuning practical under limited local hardware, the project follows a **portable training strategy**: train on GPU-capable environments when available, then run inference on local CPU/GPU as needed. In practice, this enables rapid experimentation during training and stable local deployment during development and demo phases.
+
+### 6.2 Environment and Reproducibility
+
+The training pipeline is implemented in PyTorch/Transformers and can run in both local and cloud notebooks (e.g., Colab) without code changes to core logic. Device selection is automatic (`cuda` when available, otherwise `cpu`), and random seeds are fixed for reproducibility. **Section 7** and **Appendix A** record the quantitative outputs of the completed evaluation (tables copied from pipeline exports), so the main text does not rely on file-path citations.
+
+### 6.3 Hyperparameters (Current Configuration)
+
+The default configuration used in the current pipeline is:
 
 - Model: `dbmdz/bert-base-turkish-cased`
-- Görev: Sequence classification (`num_labels=3`)
-
-### **6.2 Eğitim Stratejisi**
-
-- Optimizer: AdamW
-- Öğrenme oranı: `2e-5`
-- Epoch: `4`
+- Max sequence length: `160`
 - Batch size: `32`
-- Max length: `160`
-- Warmup ratio: `0.1`
-- Early stopping: açık
-- Sınıf ağırlıkları: açık
-- Neutral class loss boost: `1.0` (güncel koşu)
-- Checkpoint: en iyi validasyon sonucu kaydedilir
+- Epochs: `4`
+- Optimizer: **AdamW**
+- Learning rate: `2e-5`
+- Warmup ratio: `0.1` (linear warmup schedule; total warmup steps = warmup ratio × total optimizer steps)
+- Random seed: **`42`** (Python, NumPy, PyTorch; CUDA deterministic mode is not additionally forced)
+- Class-weighted loss: **enabled** (`USE_CLASS_WEIGHTS=True`). Class weights are derived from training-label frequencies; the neutral class index is **`1`** with an extra multiplier **`NEUTRAL_LOSS_BOOST=1.0`** (no additional neutral emphasis beyond inverse-frequency weighting at default)
+- Gradient clipping: **global L2 norm 1.0** on all parameters after each backward pass
+- Early stopping: **enabled**, patience **`2`**, minimum improvement **`1e-4`** on validation macro-F1
+- Mixed precision (AMP): enabled when CUDA is available
+- DataLoader: **`num_workers=2`** when training on CUDA (CPU training uses `0` workers in code)
 
-### **6.3 Inference Güvenlik Politikası**
+**Training-pool merge flags (as in `src/core/config.py` for the reported pipeline):**
 
-- Confidence fallback aktif
-- Düşük güvenli tahminlerde etiket `Neutral`a yönlendirilebilir
-- Batch sonuçlarında:
-  - `sentiment` (nihai)
-  - `raw_sentiment` (fallback öncesi)
-  - `fallback_applied` (True/False)
+- `MERGE_RAW_ABSA_FOR_TRAIN=True` (optional raw ABSA-oriented CSV folded into the training pool only)
+- `USE_HF_TRAIN_EXTRA=True` with Hugging Face dataset **`winvoker/turkish-sentiment-analysis-dataset`**, sample size **`10_000`**, subsample seed **`42`**
+- `MERGE_HARD_EXAMPLES=True` (curated `hard_examples.csv` overrides merged into training where applicable)
 
----
+Validation and test CSVs are not altered by these merges; they remain fixed for fair comparison.
 
-## **7. Deneysel Kurulum**
+### 6.4 Training Monitoring and Model Selection
 
-### **7.1 Karşılaştırılan Modeller**
+During training, both train and validation losses are tracked per epoch, and **validation macro-F1** is used for **checkpoint selection**. The best-performing weights are serialized as the single fine-tuned checkpoint used for all reported test evaluation.
 
-1. `majority_class`
-2. `tfidf_logreg`
-3. `bert_finetuned`
+**Training run record (saved experiment log, UTC `2026-04-08T10:01:47`):**
 
-### **7.2 Değerlendirme Metrikleri**
+| Quantity | Value |
+| --- | ---: |
+| Merged **training** pool size | **30,770** sentences |
+| **Validation** set size | **2,049** sentences |
+| Training **device** | CUDA GPU (`cuda:0`) |
+| Mixed precision (AMP) | **enabled** |
+| Epochs completed | **4** (full schedule; each epoch improved validation macro-F1) |
+| **Best validation macro-F1** | **0.846129** (achieved at epoch **4**) |
 
-- Accuracy
-- Macro-F1
-- Sınıf bazlı precision/recall/F1
-- Confusion matrix (ana model)
+**Per-epoch validation trace (macro-F1 selection metric):**
 
-### **7.3 Test Verisi**
+| Epoch | Train loss | Val loss | Val macro-F1 |
+| --- | ---: | ---: | ---: |
+| 1 | 0.4772 | 0.3585 | 0.771450 |
+| 2 | 0.1978 | 0.3436 | 0.796239 |
+| 3 | 0.1239 | 0.3808 | 0.818709 |
+| 4 | 0.0828 | 0.3605 | **0.846129** |
 
-Toplam test örneği: **2050**
+**Held-out test evaluation (same checkpoint as above — Section 7):**
 
----
+| Quantity | Value |
+| --- | ---: |
+| **Test** instances | **2,050** (supports: Negative 853, Neutral 130, Positive 1067) |
+| **bert_finetuned** test accuracy | **0.973659** |
+| **bert_finetuned** test macro-F1 | **0.961286** |
+| Test misclassifications | **54** (error rate **2.63%**) |
 
-## **8. Sonuçlar (Güncel Run: `run_default`)**
+Validation and test are **different** splits (2,049 vs 2,050 instances); it is **expected** that test macro-F1 can differ from validation macro-F1 once the model is frozen and evaluated on unseen data.
 
-### **8.1 Genel Karşılaştırma Sonuçları**
+**Selection discipline:** checkpoint choice follows **validation** macro-F1; **Section 7** reports **test-set** metrics for that chosen checkpoint only, without repeated test-driven tuning.
 
-| **Model** | **Accuracy** | **Macro-F1** |
+### 6.5 Performance Reporting Protocol
+
+Reported numbers in this document are taken from the **held-out test** evaluation tables in **Section 7** and duplicated for convenience in **Appendix A**. Primary **development-time** decisions should still be driven by **validation** macro-F1 as described in Section 6.4; any future stability study (e.g., multiple seeds) should be labeled explicitly so it is not confused with the single headline test run.
+
+### 6.6 Model Transfer and Deployment Readiness
+
+The trained checkpoint is environment-portable. Loading logic supports both GPU and CPU execution through device-aware `map_location`, allowing a model trained in a GPU environment to be served in local CPU-only scenarios. This supports the project goal of "train once, deploy anywhere" within the constraints of available hardware.
+
+### 6.7 Technologies Used
+
+| Category | Technology / Library | Description |
+| --- | --- | --- |
+| Programming Language | Python 3.x | Main implementation language for data processing, model training, evaluation, and backend services. |
+| Deep Learning Framework | PyTorch | Core tensor operations, automatic differentiation, and training runtime. |
+| Transformer Stack | Hugging Face Transformers | BERTurk model/tokenizer loading and sequence-classification fine-tuning utilities. |
+| NLP Toolkit (Optional) | spaCy (`tr_core_news_tr`) | Considered for additional linguistic preprocessing; not a required dependency in the final training path. |
+| Data Processing | Pandas, NumPy | CSV/dataframe transformations, label handling, and numerical preprocessing. |
+| Visualization | Matplotlib, Seaborn | Confusion matrix and sentiment-distribution plotting for analysis and reporting. |
+| Backend API | FastAPI | REST endpoints for health, metadata, single/batch prediction, upload, and visualization services. |
+| Frontend | React + Vite | Interactive demo interface for model inference and result visualization. |
+
+## 7. Results (Completed)
+
+### 7.1 Overall Baseline Comparison
+
+On the **held-out test set** (**N = 2050**), the fine-tuned BERTurk model clearly outperforms the classical baselines trained/evaluated under the same split.
+
+| Model | Accuracy | Macro-F1 |
 | --- | ---: | ---: |
 | **bert_finetuned** | **0.973659** | **0.961286** |
 | tfidf_logreg | 0.877073 | 0.796227 |
 | majority_class | 0.520488 | 0.228211 |
 
-### **8.2 Sınıf Bazlı Sonuçlar (Güncel Evaluate)**
+### 7.2 Class-wise Performance (bert_finetuned)
 
-- Negative: P=0.9821, R=0.9660, F1=0.9740
-- Neutral: P=0.9242, R=0.9385, F1=0.9313
-- Positive: P=0.9731, R=0.9841, F1=0.9786
+- **Negative:** Precision 0.982122, Recall 0.966002, F1 0.973995, Support 853
+- **Neutral:** Precision 0.924242, Recall 0.938462, F1 0.931298, Support 130
+- **Positive:** Precision 0.973123, Recall 0.984067, F1 0.978565, Support 1067
 
-### **8.3 Confusion Matrix Yorumları (BERT, run_default)**
+These scores indicate high polarity separation quality, with the strongest class-wise recall on Positive and the lowest (yet still strong) F1 on Neutral.
 
-Sayısal tablo:
+### 7.3 Confusion Matrix Analysis
 
-- Negative (gerçek): 824 doğru, 5 neutral, 24 positive
-- Neutral (gerçek): 122 doğru, 3 negative, 5 positive
-- Positive (gerçek): 1050 doğru, 12 negative, 5 neutral
+**Misclassification counts by (true label → predicted label):**
 
-Özet:
+| True label | Predicted label | Count |
+| --- | --- | ---: |
+| Negative | Positive | 24 |
+| Positive | Negative | 12 |
+| Negative | Neutral | 5 |
+| Neutral | Positive | 5 |
+| Positive | Neutral | 5 |
+| Neutral | Negative | 3 |
 
-- Sınıflar arası ayrım güçlü
-- En doğal hata bölgesi `Negative <-> Positive` sınır cümleleri
-- Neutral performansı güçlü seviyededir
+Derived **correct classification rates** (from supports in Section 7.2):
 
-### **8.4 Hata Analizi Çıktıları**
+- **Correct classification rates:**
+  - Negative: **824 / 853 = 96.60%**
+  - Neutral: **122 / 130 = 93.85%**
+  - Positive: **1050 / 1067 = 98.41%**
+- **Critical polarity-flip errors (Negative <-> Positive):**
+  - Positive -> Negative: **12 / 1067 = 1.12%**
+  - Negative -> Positive: **24 / 853 = 2.81%**
+  - Total polarity flips: **36 cases**
+- **Inter-class confusion clusters (by count):**
+  1. Negative <-> Positive: **36**
+  2. Neutral <-> Positive: **10**
+  3. Neutral <-> Negative: **8**
 
-- `data/outputs/run_default/test_misclassified.csv`
-- `data/outputs/run_default/test_confusion_pairs.csv`
+Interpretation: the model is highly reliable on main polarity discrimination, while most remaining errors occur in semantically mixed or contrastive sentences.
 
-Bu dosyalar hangi cümlelerde ve hangi sınıf çiftlerinde hata yoğunlaştığını açıkça gösterir.
+### 7.4 Inference and Error Analysis
 
-### **8.5 Batch Inference Nitel Analizi (`sentiment_batch_results.csv`)**
+The evaluation run produced **54** misclassified test sentences (**2.63%** of 2050). Recurring **linguistic patterns** among errors include:
 
-`data/outputs/sentiment_batch_results.csv` üzerinde 30 örneklik kalite kontrolü yapılmıştır.
+- **Mixed-polarity structures** (frequent *ama / fakat* contrast) where one clause is positive and the other negative.
+- **Aspect conflict within one sentence** (e.g., strong praise for atmosphere but criticism of service/price), which is difficult under sentence-level single-label supervision.
+- **Implicit dissatisfaction** in neutral-looking expressions, occasionally shifted toward Negative.
 
-Öne çıkan bulgular:
+**Representative misclassified examples (verbatim from evaluation export):**
 
-- **Fallback davranışı aktif ve işlevsel:** 30 örneğin 3 tanesinde (`id=9,17,20`) `fallback_applied=True` görülmüştür.
-- Bu üç örnekte modelin ham tahmini (`raw_sentiment`) düşük güvenle gelmiş, final etiket güvenlik politikası ile `Neutral` olarak güncellenmiştir.
-- **Düşük güven eşiği altında düzeltme örnekleri:** `confidence=0.5475`, `0.6321`, `0.4370`.
-- Net kutuplu cümlelerde model yüksek güvenle tutarlı tahmin üretmiştir (çoğunlukla `confidence > 0.95`).
-- Kararsız/nötre yakın bazı ifadelerde (`id=10`, `id=30`) negatif tarafa eğilim devam etmektedir; bu örnekler gelecekte `hard_examples.csv` ile güçlendirme adayıdır.
+| # | Sentence (excerpt) | Gold | Pred |
+| --- | --- | --- | --- |
+| 1 | Yemekler harika bir tat sunuyor fakat garsonlar ilgisiz. | Neutral | Negative |
+| 2 | Mekanın dekorasyonu gerçekten göz alıcıydı fakat yemeklerin tadı pek hoş değildi. | Positive | Negative |
+| 3 | Ortamın atmosferi mükemmel ama ücretler oldukça yüksek. | Neutral | Negative |
+| 4 | Garsonlar oldukça yardımseverdi fakat yemekler pek tatlı değildi. | Negative | Positive |
+| 5 | Restoranın ambiyansı oldukça hoş, fakat yemeklerin tadı pek iyi değil. | Positive | Negative |
 
-Yorum:
+From a deployment perspective, these findings justify the confidence-aware fallback policy and support future improvements through targeted hard-example enrichment focused on contrastive and mixed-emotion sentences.
 
-Bu sonuçlar, confidence fallback katmanının pratikte aşırı güvenli yanlışları azaltarak daha temkinli ve raporlanabilir bir batch davranışı sağladığını göstermektedir.
+### 7.5 Ablation study (eight runs)
 
----
+This subsection follows the design matrix in **`ablation_plan.csv`**: **eight** runs (`abl_01`–`abl_08`) formed by all combinations of **`USE_HF_TRAIN_EXTRA`**, **`MERGE_HARD_EXAMPLES`**, and **`CONFIDENCE_FALLBACK_ENABLED`**. Everything else matches **Section 6.3** unless you explicitly document a deviation.
 
-## **9. Tartışma**
+**Why run a structured ablation plan?** The pipeline combines **HF extra training data**, curated **hard examples**, and **confidence fallback** at inference. A **2³** grid separates **marginal** and **interaction** effects (e.g. whether HF volume helps more when hard merge is on) from confounding one-off runs. It also isolates **post-hoc fallback** from **weight updates**: pairs that differ **only** in `CONFIDENCE_FALLBACK_ENABLED` must reuse the **same checkpoint** so test deltas reflect the rule, not a new random seed trajectory.
 
-### **9.1 Teknik Yorum**
+**Protocol (recommended):**
 
-BERT modeli klasik baseline’lara göre belirgin üstünlük sağlamıştır. Bu fark özellikle bağlam gerektiren cümlelerde ve neutral sınıfında netleşmektedir. TF-IDF yaklaşımı güçlü bir referans olmasına rağmen bağlam bilgisinin sınırlı olması nedeniyle transformer tabanlı modelin gerisinde kalmıştır.
+- Use a **distinct output run name** per row (e.g. `run_abl_01` … `run_abl_08`) so tables and `experiment_last_run.json` do not overwrite each other.
+- **Retrain** whenever `USE_HF_TRAIN_EXTRA` or `MERGE_HARD_EXAMPLES` changes the training pool. Rows that differ **only** in `CONFIDENCE_FALLBACK_ENABLED` share the **same weights**; update only the inference/evaluation column for fallback (no second full train).
+- **`MERGE_RAW_ABSA_FOR_TRAIN`** is **not** toggled in the plan; keep it **fixed** (e.g. `True` as in Section 6.3) across all eight runs unless you introduce an extra study.
+- Record **best validation macro-F1** from the training log and **held-out test** accuracy / macro-F1 / **Neutral F1** after evaluation for each trained checkpoint.
 
-### **9.2 Riskler ve Sınırlılıklar**
+**Design matrix (source flags per run):**
 
-- İroni/sarkazm cümleleri halen zorlu
-- Neutral sınıfı doğası gereği belirsiz
-- Domain kayması durumunda yeniden fine-tuning gerekebilir
-- Çok kısa ve bağlamı eksik cümlelerde model güveni yapay yüksek olabilir (fallback bu riski azaltır)
+| `run_id` | `USE_HF_TRAIN_EXTRA` | `MERGE_HARD_EXAMPLES` | `CONFIDENCE_FALLBACK_ENABLED` | `requires_retrain` (plan) |
+| --- | :---: | :---: | :---: | :---: |
+| `abl_01` | False | False | False | False |
+| `abl_02` | False | False | True | False |
+| `abl_03` | False | True | False | True |
+| `abl_04` | False | True | True | True |
+| `abl_05` | True | False | False | True |
+| `abl_06` | True | False | True | True |
+| `abl_07` | True | True | False | True |
+| `abl_08` | True | True | True | True |
 
----
+*The `requires_retrain` column matches the exported **`ablation_plan.csv`** convention (`abl_01`–`abl_02` are **False**). Operationally, rows that differ **only** in `CONFIDENCE_FALLBACK_ENABLED` still **share checkpoints** with their fallback-off partner (`abl_02` with `abl_01`, `abl_04` with `abl_03`, etc.) as in the protocol bullets above.*
 
-## **10. Endüstriyel Uygulanabilirlik**
+**Aggregated results:**
 
-Sistem aşağıdaki alanlara doğrudan uyarlanabilir:
+| `run_id` | Best **val** macro-F1 | Test **accuracy** | Test **macro-F1** | Test **Neutral** F1 | One-line note |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `abl_01` | **0.824022** | **0.968780** | **0.956287** | **0.925926** | `run_abl_01`; train **18,445**; val best epoch **4**; HF/hard/fallback **off**; test errors **64**/2050 (**3.12%**); polarity flips Neg↔Pos **44**. |
+| `abl_02` | **0.824022** *(shared train w/ `abl_01`)* | **0.968780** | **0.956287** | **0.925926** | Eval-only: `CONFIDENCE_FALLBACK_ENABLED=True`; same checkpoint as `abl_01`. Exported under `data/outputs/abl_02_reports/abl_02_reports/`. Test metrics match `abl_01` (fallback did not alter labels on this split at `threshold=0.70`). |
+| `abl_03` | **0.840658** | **0.966829** | **0.949482** | **0.907143** | `run_abl_03`; train **20,770**; val best epoch **4**; HF **off**, hard **on**, fallback **off**; test errors **68**/2050 (**3.32%**); polarity flips Neg↔Pos **42**. Exported under `data/outputs/abl_03_reports/`. |
+| `abl_04` | **0.840658** *(shared train w/ `abl_03`)* | **0.966829** | **0.949482** | **0.907143** | Eval-only: `CONFIDENCE_FALLBACK_ENABLED=True`; same checkpoint as `abl_03`. Exported under `data/outputs/abl_04_reports/`. Test metrics match `abl_03` (fallback did not alter labels on this split at `threshold=0.70`). |
+| `abl_05` | **0.835461** | **0.974146** | **0.953689** | **0.902985** | `run_abl_05`; train **28,445**; val best epoch **4**; HF **on**, hard **off**, fallback **off**; test errors **53**/2050 (**2.59%**); polarity flips Neg↔Pos **27**. Exported under `data/outputs/abl_05/`. |
+| `abl_06` | **0.835461** *(shared train w/ `abl_05`)* | **0.974146** | **0.953689** | **0.902985** | Eval-only: `CONFIDENCE_FALLBACK_ENABLED=True`; same checkpoint as `abl_05`. Exported under `data/outputs/abl_06_reports/`. Test metrics match `abl_05` (fallback did not alter labels on this split at `threshold=0.70`). |
+| `abl_07` | **0.842581** | **0.974634** | **0.962001** | **0.931298** | `run_abl_07`; train **30,770**; val best epoch **4**; HF **on**, hard **on**, fallback **off**; test errors **52**/2050 (**2.54%**); polarity flips Neg↔Pos **34**. Exported under `data/outputs/abl_07_report/`. |
+| `abl_08` | **0.842581** *(shared train w/ `abl_07`)* | **0.974634** | **0.962001** | **0.931298** | Eval-only: `CONFIDENCE_FALLBACK_ENABLED=True`; same checkpoint as `abl_07`. Exported under `data/outputs/abl_08_report/`. Test metrics match `abl_07` (fallback did not alter labels on this split at `threshold=0.70`). |
 
-- E-ticaret yorum analizi
-- Sosyal medya duygu takibi
-- Müşteri destek metinlerinin ön sınıflandırılması
-- Kriz iletişimi ve marka algısı izleme
+**Per-run checklist (copy after each experiment):**
 
----
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_01` *(train + val log + test eval complete)* |
+| Output run label | `run_abl_01` |
+| Best val macro-F1 | **0.824022** |
+| Epoch of best val | **4** |
+| Test accuracy | **0.968780** |
+| Test macro-F1 | **0.956287** |
+| Test F1 (Neg / Neu / Pos) | **0.968384** / **0.925926** / **0.974552** |
+| Fallback at eval | **off** *(matches `abl_01`)* |
 
-## **11. Sonuç ve Gelecek Çalışmalar**
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_02` *(eval-only; same weights as `abl_01`)* |
+| Output / export folder | `data/outputs/abl_02_reports/abl_02_reports/` *(nested folder name as saved)* |
+| Best val macro-F1 | **0.824022** *(from `abl_01` training run)* |
+| Epoch of best val | **4** *(same)* |
+| Test accuracy | **0.968780** |
+| Test macro-F1 | **0.956287** |
+| Test F1 (Neg / Neu / Pos) | **0.968384** / **0.925926** / **0.974552** |
+| Fallback at eval | **on** *(matches `abl_02` row)* |
 
-Bu çalışma, Türkçe cümle düzeyi duygu analizi için modüler, ölçülebilir ve güçlü bir teknik altyapı ortaya koymuştur. Ana model, baseline’lara göre istatistiksel olarak anlamlı performans farkı üretmiştir.
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_03` *(train + val log + test eval complete)* |
+| Output / export folder | `data/outputs/abl_03_reports/` |
+| Best val macro-F1 | **0.840658** |
+| Epoch of best val | **4** |
+| Test accuracy | **0.966829** |
+| Test macro-F1 | **0.949482** |
+| Test F1 (Neg / Neu / Pos) | **0.965762** / **0.907143** / **0.975541** |
+| Fallback at eval | **off** *(matches `abl_03` row)* |
 
-Gelecek adımlar:
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_04` *(eval-only; same weights as `abl_03`)* |
+| Output / export folder | `data/outputs/abl_04_reports/` |
+| Best val macro-F1 | **0.840658** *(from `abl_03` training run)* |
+| Epoch of best val | **4** *(same)* |
+| Test accuracy | **0.966829** |
+| Test macro-F1 | **0.949482** |
+| Test F1 (Neg / Neu / Pos) | **0.965762** / **0.907143** / **0.975541** |
+| Fallback at eval | **on** *(matches `abl_04` row)* |
 
-1. Ablation deneyleri (`USE_HF_TRAIN_EXTRA`, `MERGE_HARD_EXAMPLES`, fallback açık/kapalı)
-2. Sistematik hata analizi raporu (yanlış örnek kümeleri)
-3. Deney artifact kayıt standardını koşu bazlı sürümlemek
-4. Domain-spesifik veri artırımı ve yeniden eğitim
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_05` *(train + val log + test eval complete)* |
+| Output / export folder | `data/outputs/abl_05/` |
+| Best val macro-F1 | **0.835461** |
+| Epoch of best val | **4** |
+| Test accuracy | **0.974146** |
+| Test macro-F1 | **0.953689** |
+| Test F1 (Neg / Neu / Pos) | **0.978299** / **0.902985** / **0.979784** |
+| Fallback at eval | **off** *(matches `abl_05` row)* |
 
----
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_06` *(eval-only; same weights as `abl_05`)* |
+| Output / export folder | `data/outputs/abl_06_reports/` |
+| Best val macro-F1 | **0.835461** *(from `abl_05` training run)* |
+| Epoch of best val | **4** *(same)* |
+| Test accuracy | **0.974146** |
+| Test macro-F1 | **0.953689** |
+| Test F1 (Neg / Neu / Pos) | **0.978299** / **0.902985** / **0.979784** |
+| Fallback at eval | **on** *(matches `abl_06` row)* |
 
-## **Kaynakça**
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_07` *(train + val log + test eval complete)* |
+| Output / export folder | `data/outputs/abl_07_report/` |
+| Best val macro-F1 | **0.842581** |
+| Epoch of best val | **4** |
+| Test accuracy | **0.974634** |
+| Test macro-F1 | **0.962001** |
+| Test F1 (Neg / Neu / Pos) | **0.975265** / **0.931298** / **0.979439** |
+| Fallback at eval | **off** *(matches `abl_07` row)* |
 
-1. Devlin, J. et al. (2018). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding.
-2. Vaswani, A. et al. (2017). Attention Is All You Need.
-3. Schweter, S. (2020). BERTurk: Turkish BERT models.
-4. Liu, B. (2012). Sentiment Analysis and Opinion Mining.
-5. Pang, B. & Lee, L. (2008). Opinion Mining and Sentiment Analysis.
-6. scikit-learn Documentation.
-7. Hugging Face Transformers Documentation.
+| Field | Value |
+| --- | --- |
+| `run_id` | `abl_08` *(eval-only; same weights as `abl_07`)* |
+| Output / export folder | `data/outputs/abl_08_report/` |
+| Best val macro-F1 | **0.842581** *(from `abl_07` training run)* |
+| Epoch of best val | **4** *(same)* |
+| Test accuracy | **0.974634** |
+| Test macro-F1 | **0.962001** |
+| Test F1 (Neg / Neu / Pos) | **0.975265** / **0.931298** / **0.979439** |
+| Fallback at eval | **on** *(matches `abl_08` row)* |
 
----
+**What we observed (summary).** For the **HF-off** face (`abl_01`–`abl_04`), enabling **hard-example merge** (`abl_03`/`abl_04` vs `abl_01`/`abl_02`) increases **best validation macro-F1** from **0.824022** to **0.840658** but reduces **held-out test macro-F1** from **0.956287** to **0.949482** and **Neutral F1** from **0.925926** to **0.907143**, with **68** test errors versus **64**—a **validation–generalisation trade-off** on the fixed split. Pairs that differ **only** in **`CONFIDENCE_FALLBACK_ENABLED=True`** at **`threshold=0.70`** match their base runs on test (`abl_02`=`abl_01`, `abl_04`=`abl_03`). **`abl_05`** (**HF on**, hard off, fallback off) is logged: **best val macro-F1 0.835461**, test **accuracy 0.974146** / **macro-F1 0.953689** / **Neutral F1 0.902985**, **53** test errors (**2.59%**), **27** Neg↔Pos flips—under this split, HF extra data **without** hard-example merge improves test accuracy versus **`abl_01`** (**0.974146** vs **0.968780**) while test macro-F1 is **slightly lower** (**0.953689** vs **0.956287**). **`abl_06`** (same weights, fallback **on** at eval) **matches `abl_05`** on all reported test metrics at **`threshold=0.70`**. **`abl_07`** (**HF on**, hard **on**, fallback **off**): **best val macro-F1 0.842581**, test **accuracy 0.974634** / **macro-F1 0.962001** / **Neutral F1 0.931298**, **52** errors (**2.54%**), **34** Neg↔Pos flips—versus **`abl_03`** (HF off, hard on), **`abl_07`** improves held-out **macro-F1** (**0.962001** vs **0.949482**) and **Neutral F1** (**0.931298** vs **0.907143**) with **fewer** total errors (**52** vs **68**) and **fewer** Neg↔Pos flips (**34** vs **42**). **`abl_08`** (fallback **on**, same weights as **`abl_07`**) **matches `abl_07`** on all reported test metrics at **`threshold=0.70`**.
 
-## **Ekler**
+**What the plan is useful for.** The grid **attributes** changes to **HF data**, **hard examples**, and **fallback** instead of anecdotal runs, supports **reproducible** thesis reporting, and **guides deployment** trade-offs (which merge flags to ship, and whether fallback is worth its complexity).
 
-### **Ek-A: Üretilen Çıktılar (run_default)**
+**Joint interpretation (all eight runs).** **Confidence fallback** at **`threshold=0.70`** did **not** change any **aggregate** held-out test metric for any of the four fallback-on rows relative to their partners (`abl_02`=`abl_01`, `abl_04`=`abl_03`, `abl_06`=`abl_05`, `abl_08`=`abl_07`); on this benchmark, max-probability mass stayed above the rule for the exported evaluation. **Hard-example merge** under **`USE_HF_TRAIN_EXTRA=False`** improves **validation** macro-F1 (**`abl_03`**/**`abl_04`** vs **`abl_01`**/**`abl_02`**) but **hurts** held-out **test macro-F1** and **Neutral F1**, with **more** test errors (**68** vs **64**), i.e. a clear **validation–test tension** for that slice. Turning **HF extra data on** while **hard merge stays off** (`abl_05`/`abl_06` vs `abl_01`/`abl_02`) **raises test accuracy** (**0.974146** vs **0.968780**) but **lowers** test macro-F1 (**0.953689** vs **0.956287**) and **Neutral F1** (**0.902985** vs **0.925926**). The **HF-on + hard-on** configuration (`abl_07`/`abl_08`) achieves the **strongest** reported combination of **test macro-F1** (**0.962001**) and **Neutral F1** (**0.931298**) in the ablation table, with the **fewest** errors (**52**) among trained rows and **fewer** Neg↔Pos flips than HF-off+hard (**34** vs **42**). Overall, **HF** and **hard merge** move **different** levers on val vs test; **fallback** here is a **no-op on aggregates** but remains a **cheap safeguard** for other inputs (see **Section 8.4**).
 
-- `data/outputs/run_default/baseline_comparison.csv`
-- `data/outputs/run_default/baseline_class_reports.csv`
-- `data/outputs/run_default/confusion_matrix.png`
-- `data/outputs/run_default/test_misclassified.csv`
-- `data/outputs/run_default/test_confusion_pairs.csv`
 
-### **Ek-B: Deney Artifact**
+## 8. Discussion (Completed)
 
-- `data/outputs/experiment_last_run.json`
+Section **7.1–7.2** report the **primary** fine-tuned BERTurk checkpoint under the default training/evaluation configuration described in **Section 6** (held-out test **N = 2050**). Section **7.5** reports **controlled ablations** where merge and inference flags differ by design; lower headline test macro-F1 on some ablation rows (e.g. `abl_01`–`abl_04`) is therefore **expected** and should not be read as a contradiction of Section 7.1 without aligning the configuration.
 
-### **Ek-C: Kullanılan Temel Konfigürasyon Özeti**
+### 8.1 Main Findings (Completed)
 
-- Model: BERTurk
-- Epoch: 4
-- Batch Size: 32
-- Learning Rate: 2e-5
-- Max Length: 160
-- Early Stopping: Açık
-- Class Weights: Açık
-- Neutral Loss Boost: 1.0
-- Confidence Fallback: Açık
+The fine-tuned **BERTurk** classifier substantially outperforms **TF–IDF + logistic regression** and the **majority-class** baseline on the same split (**Section 7.1**). Contextual token representations capture non-linear interactions and sub-word morphology far better than sparse bag-of-words features, which explains most of the accuracy and macro-F1 gap. The majority baseline is structurally weak on imbalanced three-way sentiment because it collapses predictions onto the dominant class.
 
+Class-wise behaviour (**Section 7.2**) is strongest on **Positive** (highest F1) and comparatively weakest on **Neutral**, consistent with the **smallest support** for Neutral in the test distribution. Neutral spans inherently vague or low-intensity sentiment, so the model’s relative difficulty is both a **data scarcity** effect and a **semantic ambiguity** effect. Confusion concentrates on **contrastive** and **mixed-polarity** sentences (**Sections 7.3–7.4**): when a single label must summarize two opposing evaluations joined by *ama/fakat*, sentence-level supervision forces a compromise label that neither clause fully satisfies, which increases polarity flips and Neutral boundary errors.
+
+### 8.2 Error Taxonomy (Based on Misclassified Samples) (Completed)
+
+The following taxonomy groups recurring failure modes observed in the misclassification analysis (**Section 7.4**). Each row gives one **verbatim** test excerpt (Turkish), the **gold** label, the **predicted** label, and a one-line interpretation.
+
+| Category | Representative excerpt (test) | Gold | Pred | One-line interpretation |
+| --- | --- | --- | --- | --- |
+| Contrastive conjunctions | *Yemekler harika bir tat sunuyor fakat garsonlar ilgisiz.* | Neutral | Negative | Concessive structure pulls the model toward the negative clause despite global neutrality. |
+| Mixed sentiment (single sentence) | *Mekanın dekorasyonu gerçekten göz alıcıydı fakat yemeklerin tadı pek hoş değildi.* | Positive | Negative | Aspect-level praise and criticism conflict under a single sentence-level polarity target. |
+| Neutral vs polarized boundary | *Ortamın atmosferi mükemmel ama ücretler oldukça yüksek.* | Neutral | Negative | Price criticism dominates the representation even when the annotator chose Neutral overall. |
+| Polarity flip (Neg ↔ Pos) | *Garsonlar oldukça yardımseverdi fakat yemekler pek tatlı değildi.* | Negative | Positive | Service positivity competes with food criticism; the model locks onto the “wrong” clause for the gold label. |
+| Implicit / low-intensity dissatisfaction | *(See narrative bullets in Section 7.4 and `test_misclassified.csv` exports.)* | *(varies)* | *(varies)* | Mild or indirect negativity can disagree with a Neutral gold standard under sentence-level single labels. |
+
+Long-sequence **attention drift** was not isolated as a dominant failure mode in the reviewed sample; most errors remain interpretable as **semantic** rather than **length** artefacts within `max_len=160`.
+
+### 8.3 Validity, Limitations, and Threats (Completed)
+
+**Domain bias and transfer.** The training and evaluation corpora are **sentence-level** Turkish sentiment with a strong **service/review** flavour. Performance on distant domains (e.g. legal text, clinical notes, highly informal social media) is **not guaranteed** without adaptation or re-labeling.
+
+**Class imbalance.** Neutral has the **lowest support** on the held-out test set (**Section 7.2**). Class-weighted loss mitigates but does not remove imbalance effects; reported Neutral F1 should be read alongside **support** and confusion tables.
+
+**Label ambiguity.** Sentence-level **single** labels cannot fully encode **multi-aspect** opinions. Some “errors” may reflect **legitimate alternate readings** rather than model incapacity, which limits ceiling accuracy under this annotation scheme.
+
+**Experimental breadth.** Results rely on a **fixed random seed** and practical GPU/Colab constraints. The **eight-run** ablation grid in **Section 7.5** is now **fully populated**, which tightens internal comparisons across **HF**, **hard-example merge**, and **fallback**—while still reflecting a **single** optimisation trajectory per trained configuration. External HF subsampling (`HF_SAMPLE_SIZE = 10_000`) introduces an additional **sensitivity** dimension.
+
+### 8.4 Practical Implications (Completed)
+
+The project closes the loop from **training artefacts** to a **deployable demo**: the serialized checkpoint is loaded by a **FastAPI** service exposing **health**, **metadata**, **single** and **batch** prediction, **CSV upload**, and **distribution visualization** endpoints, with a **React + Vite** client for interactive use (**Sections 1, 6.7**).
+
+**Confidence fallback** is operationally useful as a **safety valve** for low-certainty inputs even when, on the **held-out benchmark** at `threshold=0.70`, fallback did not relabel any test instance for the evaluated ablation pairs (**Section 7.5**). In production, traffic can be **more out-of-distribution** than the test split; mapping low-confidence logits to **Neutral** remains a low-cost risk reduction pattern.
+
+The model is **most reliable** when polarity is **explicit and one-sided**; it is **riskiest** on **contrastive** and **mixed-affect** sentences (**Section 7.4**). Batch endpoints and simple distribution charts support **non-expert** workflows (triage, campaign monitoring) without requiring notebook literacy.
+
+### 8.5 Recommended Improvement Roadmap (Completed)
+
+1. **Targeted hard-example curriculum** focused on *ama/fakat* and mixed-aspect restaurant language, possibly with **counterfactual** or **multi-label** auxiliary tasks, building on the validation–test trade-off observed when `MERGE_HARD_EXAMPLES` is toggled (**Section 7.5**).
+2. **Multi-seed training and reporting** (e.g. mean ± std on validation and test) to quantify variance and reduce overfitting to a single optimisation trajectory.
+3. **Calibration analysis** (reliability diagrams, temperature scaling) so the **confidence fallback** threshold is chosen from **measured** probability quality rather than a fixed default.
+4. **Threshold and calibration follow-up** now that the **Section 7.5** grid shows fallback inactivity on the held-out split at **`0.70`**—sweep thresholds and measure reliability on **out-of-domain** samples where fallback may activate.
+5. **Latency and compression** (distillation, quantisation, smaller encoders) if the API path moves from demo to **production** scale.
+
+## 9. Conclusion (Completed)
+
+This work addressed **sentence-level Turkish sentiment classification** (Negative / Neutral / Positive) for short user-generated text. The core method is **supervised fine-tuning of BERTurk** with a **reproducible** training stack—class-weighted loss, warmup, AMP, early stopping, leakage-aware merging rules, and held-out evaluation with classical baselines. On the **primary** reported checkpoint (**Section 7.1**), the fine-tuned model achieves **strong accuracy and macro-F1** relative to TF–IDF + logistic regression and a majority baseline, while error analysis highlights **contrastive** and **mixed-affect** sentences as the dominant residual risk. Beyond offline metrics, the same artefact path supports a **FastAPI + React** inference demo, aligning laboratory results with a **deployment-shaped** contribution. Overall, the thesis delivers both **empirical** evidence under transparent protocols and an **engineering** path from training exports to an API-driven client workflow.
+
+## References (Completed)
+
+References follow **APA 7th edition**. Web pages include retrieval date (**11 April 2026**).
+
+Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of deep bidirectional transformers for language understanding. In *Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies* (Vol. 1, pp. 4171–4186). Association for Computational Linguistics. https://doi.org/10.18653/v1/N19-1423
+
+FastAPI Documentation. (n.d.). *FastAPI*. Retrieved 11 April 2026, from https://fastapi.tiangolo.com/
+
+Hugging Face. (n.d.). *Datasets: winvoker/turkish-sentiment-analysis-dataset*. Retrieved 11 April 2026, from https://huggingface.co/datasets/winvoker/turkish-sentiment-analysis-dataset
+
+Hugging Face. (n.d.). *Transformers documentation*. Retrieved 11 April 2026, from https://huggingface.co/docs/transformers
+
+Kim, Y. (2014). Convolutional neural networks for sentence classification. In *Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)* (pp. 1746–1751). Association for Computational Linguistics. https://doi.org/10.3115/v1/D14-1181
+
+Liu, B. (2012). *Sentiment analysis and opinion mining*. Morgan & Claypool Publishers. https://doi.org/10.2200/S00416ED1V01Y201204HLT016
+
+Pang, B., & Lee, L. (2008). Opinion mining and sentiment analysis. *Foundations and Trends in Information Retrieval*, *2*(1–2), 1–135. https://doi.org/10.1561/1500000011
+
+Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., … Chintala, S. (2019). PyTorch: An imperative style, high-performance deep learning library. In *Advances in Neural Information Processing Systems* (Vol. 32). Curran Associates, Inc. https://papers.neurips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf
+
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., … Duchesnay, E. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research*, *12*, 2825–2830. https://www.jmlr.org/papers/v12/pedregosa11a.html
+
+Pontiki, M., Galanis, D., Pavlopoulos, J., Papageorgiou, H., Androutsopoulos, I., & Manandhar, S. (2014). SemEval-2014 Task 4: Aspect based sentiment analysis. In *Proceedings of the 8th International Workshop on Semantic Evaluation (SemEval 2014)* (pp. 27–35). Association for Computational Linguistics. https://doi.org/10.3115/v1/S14-2004
+
+React Documentation. (n.d.). *React*. Retrieved 11 April 2026, from https://react.dev/
+
+Schweter, S. (2020). *BERTurk — BERT models for Turkish* (Version 1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.3770924
+
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., … Polosukhin, I. (2017). Attention is all you need. In *Advances in Neural Information Processing Systems* (Vol. 30). Curran Associates, Inc. https://papers.neurips.cc/paper/7181-attention-is-all-you-need.pdf
+
+Vite Documentation. (n.d.). *Vite*. Retrieved 11 April 2026, from https://vitejs.dev/
+
+Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., … Rush, A. M. (2020). Transformers: State-of-the-art natural language processing. In *Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations* (pp. 38–45). Association for Computational Linguistics. https://doi.org/10.18653/v1/2020.emnlp-demos.6
+
+## Appendix
+
+### Appendix A - Tabulated Evaluation Exports (Completed)
+
+Sections **A.1–A.4** reproduce the **test-set** evaluation exports (aligned with Section 7). Section **A.5** summarizes the **training-time validation trace** from the same training run as Section 6.4 (no file paths in the body text).
+
+**A.1 Baseline comparison (test set)**
+
+| Model | Accuracy | Macro-F1 |
+| --- | ---: | ---: |
+| bert_finetuned | 0.973659 | 0.961286 |
+| tfidf_logreg | 0.877073 | 0.796227 |
+| majority_class | 0.520488 | 0.228211 |
+
+**A.2 Per-model, per-class classification report (test set)**
+
+| Model | Class | Precision | Recall | F1 | Support |
+| --- | --- | ---: | ---: | ---: | ---: |
+| majority_class | Negative | 0.0 | 0.0 | 0.0 | 853 |
+| majority_class | Neutral | 0.0 | 0.0 | 0.0 | 130 |
+| majority_class | Positive | 0.520488 | 1.0 | 0.684633 | 1067 |
+| tfidf_logreg | Negative | 0.875719 | 0.892145 | 0.883856 | 853 |
+| tfidf_logreg | Neutral | 0.589552 | 0.607692 | 0.598485 | 130 |
+| tfidf_logreg | Positive | 0.914995 | 0.897844 | 0.906339 | 1067 |
+| bert_finetuned | Negative | 0.982122 | 0.966002 | 0.973995 | 853 |
+| bert_finetuned | Neutral | 0.924242 | 0.938462 | 0.931298 | 130 |
+| bert_finetuned | Positive | 0.973123 | 0.984067 | 0.978565 | 1067 |
+
+**A.3 Confusion pairs (raw counts, test set)**
+
+| True label | Predicted label | Count |
+| --- | --- | ---: |
+| Negative | Positive | 24 |
+| Positive | Negative | 12 |
+| Negative | Neutral | 5 |
+| Neutral | Positive | 5 |
+| Positive | Neutral | 5 |
+| Neutral | Negative | 3 |
+
+**A.4 Misclassification volume**
+
+- Total errors: **54** on **2050** test instances.
+
+**A.5 Training run — validation trace (same run as Section 6.4)**
+
+| Quantity | Value |
+| --- | ---: |
+| Merged training pool | **30,770** sentences |
+| Validation size | **2,049** sentences |
+| Best **validation** macro-F1 | **0.846129** (epoch **4**) |
+| Epochs run | **4** |
+| Runtime | CUDA, AMP **on** |
+
+| Epoch | Train loss | Val loss | Val macro-F1 |
+| --- | ---: | ---: | ---: |
+| 1 | 0.477190 | 0.358530 | 0.771450 |
+| 2 | 0.197767 | 0.343610 | 0.796239 |
+| 3 | 0.123857 | 0.380846 | 0.818709 |
+| 4 | 0.082811 | 0.360478 | **0.846129** |
+
+*Optional figure:* include a **confusion matrix heatmap** in the PDF version of the thesis if generated by the evaluation script (figure caption only—no file path in the body text).
+
+### Appendix B - Configuration Snapshot (Completed)
+
+The exact training-time settings for the reported model match **Section 6.3**. The saved training log for this run additionally records: `random_seed=42`, `early_stopping_patience=2`, `early_stopping_min_delta=0.0001`, `merge_raw_absa_for_train=True`, `use_hf_train_extra=True` with `hf_dataset_id=winvoker/turkish-sentiment-analysis-dataset`, `hf_sample_size=10000`, `hf_seed=42`, `merge_hard_examples=True`, `leakage_guard_enabled=True`, and inference defaults `confidence_fallback_enabled=True`, `confidence_threshold=0.7`, `confidence_fallback_label=Neutral`.
+
+### Appendix C - Example Error Cases (Completed)
+
+Ten representative rows from the **`run_default`** evaluation export **`test_misclassified.csv`** (same primary run as **Sections 7.1–7.4**). **Error category** follows the taxonomy in **Section 8.2** (abbreviated here for column width).
+
+| # | Sentence (verbatim; line breaks removed) | True | Pred | Error category |
+| --- | --- | --- | --- | --- |
+| 1 | Yemekler harika bir tat sunuyor fakat garsonlar ilgisiz. | Neutral | Negative | Contrastive / Neutral boundary |
+| 2 | Mekanın dekorasyonu gerçekten göz alıcıydı fakat yemeklerin tadı pek hoş değildi. | Positive | Negative | Mixed sentiment / contrastive |
+| 3 | Ortamın atmosferi mükemmel ama ücretler oldukça yüksek. | Neutral | Negative | Neutral vs polarized boundary |
+| 4 | Garsonlar oldukça yardımseverdi fakat yemekler pek tatlı değildi. | Negative | Positive | Polarity flip (Neg ↔ Pos) |
+| 5 | Restoranın ambiyansı oldukça hoş, fakat yemeklerin tadı pek iyi değil. | Positive | Negative | Polarity flip / contrastive |
+| 6 | Güler yüzlü personeli ile ortamı rahatlatan, fakat fiyatları biraz yüksek olan bir mekan. | Negative | Neutral | Implicit dissatisfaction / hedged polarity |
+| 7 | tatli secenekleri de mevcur sufle ve kunefe var menu de var da pide o kadar gec gelince insani tatli siparisi dusunduruyor. | Negative | Positive | Informal syntax / implicit negation |
+| 8 | Yemeklerin tadı mükemmel fakat servis biraz yavaş. | Neutral | Positive | Neutral vs polarized boundary |
+| 9 | Mekanın tasarımı harika ama menüdeki fiyatlar biraz tuzlu, atmosfer ve yer açısından bu fiyatları eleştirmek haksızlık olur. | Positive | Neutral | Mixed sentiment / self-correction |
+| 10 | Kahvaltı çeşitleri gerçekten çok lezzetli ve doyurucu, fakat fiyatlar biraz yüksek. Personel oldukça yardımsever, ama ortamın daha ferah olması, daha iyi bir deneyim sunabilirdi. | Neutral | Negative | Long contrastive chain |
+
+### Appendix D - Project Evolution Note (Completed)
+
+The repository and early project framing included **aspect-based** sentiment resources and terminology (e.g. ABSA-oriented corpora and SemEval-style positioning in references). The **final thesis scope** was deliberately narrowed to **sentence-level three-way polarity** for three reasons: (i) **annotation consistency**—single-sentence gold labels are easier to audit than coupled aspect spans; (ii) **deployment alignment**—many product surfaces (ticket triage, review stars, campaign monitoring) consume **whole-sentence** scores first; and (iii) **methodological closure**—one primary supervised objective avoids mixing ABSA extraction quality with sentence-classifier quality in the same headline claims. ABSA remains a **natural extension** (see **Section 8.5**) rather than a silent scope change within the reported experiments.

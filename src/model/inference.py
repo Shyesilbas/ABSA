@@ -25,6 +25,25 @@ def load_classifier(device: Optional[torch.device] = None):
 
 
 @torch.no_grad()
+def logits_to_final_class_ids(logits: torch.Tensor) -> torch.Tensor:
+    """Batch logits → class indices; matches `_predict_core` when fallback is enabled."""
+    probs = F.softmax(logits.float(), dim=-1)
+    conf, raw_idx = probs.max(dim=-1)
+    if not CONFIDENCE_FALLBACK_ENABLED:
+        return raw_idx
+    if CONFIDENCE_FALLBACK_LABEL in CLASS_NAMES:
+        neutral_idx = CLASS_NAMES.index(CONFIDENCE_FALLBACK_LABEL)
+    elif "Neutral" in CLASS_NAMES:
+        neutral_idx = CLASS_NAMES.index("Neutral")
+    else:
+        return raw_idx
+    mask = conf < float(CONFIDENCE_THRESHOLD)
+    out = raw_idx.clone()
+    out[mask] = neutral_idx
+    return out
+
+
+@torch.no_grad()
 def _predict_core(model, tokenizer, device, text: str) -> dict:
     enc = tokenizer(
         str(text).strip(),
@@ -38,17 +57,7 @@ def _predict_core(model, tokenizer, device, text: str) -> dict:
     probs = F.softmax(logits, dim=-1).squeeze(0)
     raw_pred_idx = int(probs.argmax().item())
     confidence = float(probs.max().item())
-
-    fallback_idx = raw_pred_idx
-    if CONFIDENCE_FALLBACK_ENABLED and confidence < float(CONFIDENCE_THRESHOLD):
-        if CONFIDENCE_FALLBACK_LABEL in CLASS_NAMES:
-            fallback_idx = CLASS_NAMES.index(CONFIDENCE_FALLBACK_LABEL)
-        elif "Neutral" in CLASS_NAMES:
-            fallback_idx = CLASS_NAMES.index("Neutral")
-        else:
-            fallback_idx = raw_pred_idx
-
-    final_pred_idx = fallback_idx
+    final_pred_idx = int(logits_to_final_class_ids(logits).item())
     return {
         "label": CLASS_NAMES[final_pred_idx],
         "probs": probs.cpu().tolist(),

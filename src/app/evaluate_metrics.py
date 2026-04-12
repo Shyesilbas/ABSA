@@ -21,6 +21,7 @@ from core.config import (
 )
 from core.progress import loader_total, track
 from data.dataset_loader import SentenceClassificationDataset
+from model.inference import logits_to_final_class_ids
 from model.loader import load_finetuned_resources
 
 matplotlib.use("Agg")
@@ -36,7 +37,7 @@ def collect_predictions(model, loader, device, *, progress_desc: str = "Test eva
         mask = batch["attention_mask"].to(device)
         labels = batch["labels"].to(device)
         logits = model(input_ids=ids, attention_mask=mask).logits
-        pred = logits.argmax(dim=-1)
+        pred = logits_to_final_class_ids(logits)
         all_y.extend(labels.cpu().tolist())
         all_p.extend(pred.cpu().tolist())
         all_s.extend(batch["sentence"])

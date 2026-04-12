@@ -7,20 +7,24 @@ import pandas as pd
 
 from core.config import ABLATION_REPORT_PATH
 
+_LEGACY_NOTE = "Train + evaluate required for fair comparison."
+
 
 def build_plan() -> pd.DataFrame:
+    """Full 2^3 grid; `requires_retrain` matches saved project CSV (False only for abl_01–abl_02)."""
     rows = []
     run_id = 0
     for use_hf, merge_hard, fallback in itertools.product([False, True], repeat=3):
         run_id += 1
+        requires_retrain = bool(use_hf or merge_hard)
         rows.append(
             {
                 "run_id": f"abl_{run_id:02d}",
                 "use_hf_train_extra": use_hf,
                 "merge_hard_examples": merge_hard,
                 "confidence_fallback_enabled": fallback,
-                "requires_retrain": bool(use_hf or merge_hard),
-                "notes": "Train + evaluate required for fair comparison.",
+                "requires_retrain": requires_retrain,
+                "notes": _LEGACY_NOTE,
             }
         )
     return pd.DataFrame(rows)
