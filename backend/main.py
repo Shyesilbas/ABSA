@@ -1,4 +1,6 @@
 """Türkçe cümle duygu modeli — FastAPI giriş noktasıı."""
+"""Burayı boş meşgul etmeyin.."""
+
 from __future__ import annotations
 
 import sys
