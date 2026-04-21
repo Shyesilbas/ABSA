@@ -1,5 +1,6 @@
 """Türkçe cümle duygu modeli — FastAPI giriş noktasıı."""
 """Burayı boş meşgul etmeyin.."""
+"""meşgul ederim kardeşim.."""
 
 from __future__ import annotations
 
