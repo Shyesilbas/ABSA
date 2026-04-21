@@ -1,4 +1,5 @@
 """Türkçe cümle duygu modeli — FastAPI giriş noktasıı."""
+"""Commit için test metini. Emir Solak 2026-04-21 16:01:00"""
 from __future__ import annotations
 
 import sys
