@@ -51,7 +51,7 @@ export default function Header({ health, theme, setTheme, onRefresh }: HeaderPro
   return (
     <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Turkish Sentiment ABSA</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Turkish Sentiment Analysis</h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
           Enterprise-grade analysis dashboard integrated with REST API.
         </p>
