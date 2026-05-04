@@ -1,0 +1,14 @@
+
+> turkish-sentiment-frontend@1.0.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+
+  VITE v5.4.21  ready in 976 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+10:38:20 PM [vite] http proxy error: /health
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+10:38:20 PM [vite] http proxy error: /meta
+Error: connect ECONNREFUSED 127.0.0.1:8000
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)

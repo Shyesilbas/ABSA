@@ -1,85 +1,9 @@
-:root {
-  --bg: #0b1018;
-  --surface: #131b27;
-  --border: #2c3a4d;
-  --text: #e6edf3;
-  --muted: #93a0ae;
-  --accent: #6eb3ff;
-  --danger: #f85149;
-  --neg: #ff4b4b;
-  --neu: #7d7d7d;
-  --pos: #4caf50;
-  --radius: 10px;
-  --shadow-soft: 0 8px 26px rgba(4, 9, 16, 0.35);
-  --font: "Segoe UI", system-ui, -apple-system, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--font), sans-serif;
-  background: radial-gradient(circle at 10% -10%, #1c2e47 0%, var(--bg) 45%);
-  color: var(--text);
-  line-height: 1.5;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  border-radius: var(--radius);
-  font-weight: 600;
-  transition: opacity 0.15s, transform 0.05s, box-shadow 0.15s;
-}
-
-button:hover:not(:disabled) {
-  opacity: 0.92;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
-}
-
-button:active:not(:disabled) {
-  transform: scale(0.99);
-}
-
-button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-input,
-textarea {
-  font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--text);
-  background: #0d1521;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.65rem 0.85rem;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-input:focus,
-textarea:focus {
-  border-color: var(--accent);
-}
-
-textarea {
-  width: 100%;
-  min-height: 120px;
-  resize: vertical;
+@layer base {
+  body {
+    @apply transition-colors duration-300 antialiased font-sans bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-200;
+  }
 }

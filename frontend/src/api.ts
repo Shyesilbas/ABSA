@@ -6,6 +6,13 @@ export function apiBase(): string {
   return "http://127.0.0.1:8001";
 }
 
+/** C# gateway ClientApiKey ile uyum (boşsa header yok). */
+function gatewayHeaders(): Record<string, string> {
+  const key = import.meta.env.VITE_GATEWAY_API_KEY?.trim();
+  if (!key) return {};
+  return { "x-api-key": key };
+}
+
 async function parseError(res: Response): Promise<string> {
   const t = await res.text();
   try {
@@ -23,6 +30,7 @@ export async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     ...init,
     headers: {
+      ...gatewayHeaders(),
       Accept: "application/json",
       ...(init?.body ? { "Content-Type": "application/json" } : {}),
       ...init?.headers,
@@ -36,7 +44,11 @@ export async function apiPostBlob(path: string, body: unknown): Promise<Blob> {
   const url = `${apiBase()}${path.startsWith("/") ? path : `/${path}`}`;
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "image/png" },
+    headers: {
+      ...gatewayHeaders(),
+      "Content-Type": "application/json",
+      Accept: "image/png",
+    },
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(await parseError(res));
@@ -52,7 +64,7 @@ export async function apiUploadBatchCsv(
   form.append("file", file);
   if (opts?.topicTitle?.trim()) form.append("topic_title", opts.topicTitle.trim());
   if (opts?.keywordsSubtitle?.trim()) form.append("keywords_subtitle", opts.keywordsSubtitle.trim());
-  const res = await fetch(url, { method: "POST", body: form });
+  const res = await fetch(url, { method: "POST", headers: gatewayHeaders(), body: form });
   if (!res.ok) throw new Error(await parseError(res));
   return res.json() as Promise<BatchUploadResponse>;
 }

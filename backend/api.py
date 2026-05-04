@@ -66,22 +66,14 @@ def _ensure_internal_access(token: str | None) -> None:
 
 
 def _resolved_topic_kw(body: VisualizeDistributionRequest) -> tuple[str, str]:
-    from core.config import BATCH_TOPIC_KEYWORDS, BATCH_TOPIC_TITLE
-
-    title = body.topic_title.strip() if body.topic_title else BATCH_TOPIC_TITLE
-    kw = (
-        body.keywords_subtitle.strip()
-        if body.keywords_subtitle
-        else ", ".join(BATCH_TOPIC_KEYWORDS)
-    )
+    title = body.topic_title.strip() if body.topic_title else ""
+    kw = body.keywords_subtitle.strip() if body.keywords_subtitle else ""
     return title, kw
 
 
 def _resolved_topic_kw_from_params(topic_title: str | None, keywords_subtitle: str | None) -> tuple[str, str]:
-    from core.config import BATCH_TOPIC_KEYWORDS, BATCH_TOPIC_TITLE
-
-    title = topic_title.strip() if topic_title else BATCH_TOPIC_TITLE
-    kw = keywords_subtitle.strip() if keywords_subtitle else ", ".join(BATCH_TOPIC_KEYWORDS)
+    title = topic_title.strip() if topic_title else ""
+    kw = keywords_subtitle.strip() if keywords_subtitle else ""
     return title, kw
 
 
@@ -243,6 +235,10 @@ async def predict_batch_upload(
 
     df = _read_upload_csv(content)
     entries = _csv_entries_from_dataframe(df, max_items=MAX_BATCH_ITEMS)
+    print(f"DEBUG: Processing {file.filename}. Found {len(entries)} entries.")
+    if entries:
+        print(f"DEBUG: Sample: {entries[0]['text'][:50]}")
+
     if not entries:
         raise HTTPException(status_code=422, detail="Gecerli metin satiri bulunamadi (min 2 karakter).")
 

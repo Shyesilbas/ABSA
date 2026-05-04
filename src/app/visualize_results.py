@@ -32,6 +32,7 @@ def sentiment_distribution_counts(df: pd.DataFrame) -> tuple[dict[str, int], int
     prep = prepare_batch_results_dataframe(df)
     vc = prep["sentiment"].value_counts()
     counts = {str(k): int(v) for k, v in vc.items()}
+    print(f"DEBUG: Calculated counts: {counts}, Total: {len(prep)}")
     return counts, len(prep)
 
 
@@ -43,24 +44,39 @@ def render_sentiment_distribution_png(
 ) -> bytes:
     """Duygu dağılımı sütun grafiğini PNG baytları olarak üretir."""
     prep = prepare_batch_results_dataframe(df)
-    title = topic_title if topic_title is not None else BATCH_TOPIC_TITLE
-    kw = keywords_text if keywords_text is not None else ", ".join(BATCH_TOPIC_KEYWORDS)
+    title = topic_title.strip() if topic_title else ""
+    kw = keywords_text.strip() if keywords_text else ""
 
     colors = {"Negative": "#FF4B4B", "Neutral": "#7D7D7D", "Positive": "#4CAF50"}
     order = ["Negative", "Neutral", "Positive"]
 
-    plt.figure(figsize=(10, 6))
+    # Global plt yerine Figure nesnesi kullanarak izolasyon sağlıyoruz
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    fig = Figure(figsize=(10, 6))
+    canvas = FigureCanvasAgg(fig)
+    ax = fig.add_subplot(111)
+    
     sns.set_style("whitegrid")
-    ax = sns.countplot(
+    sns.countplot(
         x="sentiment",
         data=prep,
         palette=colors,
         order=[o for o in order if o in set(prep["sentiment"].unique())],
+        ax=ax
     )
-    plt.title(f"Sentiment distribution | {title} (n={len(prep)})", fontsize=13, fontweight="bold")
-    plt.suptitle(f"Keywords: {kw}", fontsize=10, y=0.98)
-    plt.xlabel("Class")
-    plt.ylabel("Count")
+    
+    if title:
+        fig.suptitle(f"Sentiment distribution | {title} (n={len(prep)})", fontsize=13, fontweight="bold")
+    else:
+        fig.suptitle(f"Sentiment distribution (n={len(prep)})", fontsize=13, fontweight="bold")
+    
+    if kw:
+        ax.set_title(f"Keywords: {kw}", fontsize=10)
+    
+    ax.set_xlabel("Class")
+    ax.set_ylabel("Count")
 
     for p in ax.patches:
         h = int(p.get_height())
@@ -75,10 +91,9 @@ def render_sentiment_distribution_png(
                 textcoords="offset points",
             )
 
-    plt.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.tight_layout(rect=(0, 0, 1, 0.95))
     buf = io.BytesIO()
-    plt.savefig(buf, format="png", dpi=300)
-    plt.close()
+    fig.savefig(buf, format="png", dpi=300)
     return buf.getvalue()
 
 
