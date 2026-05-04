@@ -10,3 +10,10 @@ env/
 .DS_Store
 
 .idea/
+.vscode/
+node_modules/
+ABSA/
+gateway_batch_test.csv
+gateway_test_distribution.png
+backend-csharp/bin/
+backend-csharp/obj/

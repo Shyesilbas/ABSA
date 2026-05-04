@@ -3,7 +3,7 @@ export function apiBase(): string {
   const env = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
   if (env) return env;
   if (import.meta.env.DEV) return "/api";
-  return "http://127.0.0.1:8000";
+  return "http://127.0.0.1:8001";
 }
 
 async function parseError(res: Response): Promise<string> {

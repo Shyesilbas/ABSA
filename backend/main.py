@@ -1,9 +1,4 @@
 """Türkçe cümle duygu modeli — FastAPI giriş noktasıı."""
-"""Burayı boş meşgul etmeyin.."""
-"""meşgul ederim kardeşim.."""
-"""meşgul ederim emir olarak. yazdım bumbebummmm.."""
-"""backend update oldu"""
-
 from __future__ import annotations
 
 import sys
