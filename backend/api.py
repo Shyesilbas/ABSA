@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import io
+import os
 import pandas as pd
-from fastapi import APIRouter, File, Form, HTTPException, Response, UploadFile
+from fastapi import APIRouter, File, Form, Header, HTTPException, Response, UploadFile
 
 from app.batch_predict import predict_batch_entries
 from app.visualize_results import (
@@ -46,6 +47,7 @@ TEXT_COLUMN_CANDIDATES = (
     "message",
 )
 ID_COLUMN_CANDIDATES = ("id", "row_id", "item_id")
+INFERENCE_INTERNAL_TOKEN = os.getenv("INFERENCE_INTERNAL_TOKEN")
 
 
 def _ensure_model() -> None:
@@ -54,6 +56,13 @@ def _ensure_model() -> None:
         raise HTTPException(status_code=503, detail=f"Model yüklenemedi: {err}")
     if not state.model_ready():
         raise HTTPException(status_code=503, detail="Model henüz hazır değil.")
+
+
+def _ensure_internal_access(token: str | None) -> None:
+    # Token is optional; when configured, protect inference routes
+    # so only the C# orchestration API can call them.
+    if INFERENCE_INTERNAL_TOKEN and token != INFERENCE_INTERNAL_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized internal inference call.")
 
 
 def _resolved_topic_kw(body: VisualizeDistributionRequest) -> tuple[str, str]:
@@ -173,7 +182,11 @@ def meta() -> MetaResponse:
 
 
 @router.post("/predict", response_model=PredictResponse, tags=["Kullanıcı — Tahmin"])
-def predict_one(body: PredictRequest) -> PredictResponse:
+def predict_one(
+    body: PredictRequest,
+    x_inference_token: str | None = Header(default=None),
+) -> PredictResponse:
+    _ensure_internal_access(x_inference_token)
     _ensure_model()
     model, tokenizer, device = state.get_model_bundle()
     label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, body.text)
@@ -188,7 +201,11 @@ def predict_one(body: PredictRequest) -> PredictResponse:
 
 
 @router.post("/predict/batch", response_model=BatchPredictResponse, tags=["Kullanıcı — Tahmin"])
-def predict_batch(body: BatchPredictRequest) -> BatchPredictResponse:
+def predict_batch(
+    body: BatchPredictRequest,
+    x_inference_token: str | None = Header(default=None),
+) -> BatchPredictResponse:
+    _ensure_internal_access(x_inference_token)
     _ensure_model()
     model, tokenizer, device = state.get_model_bundle()
     entries = [item.model_dump() for item in body.items]
@@ -206,7 +223,9 @@ async def predict_batch_upload(
     file: UploadFile = File(...),
     topic_title: str | None = Form(default=None),
     keywords_subtitle: str | None = Form(default=None),
+    x_inference_token: str | None = Header(default=None),
 ) -> BatchUploadResponse:
+    _ensure_internal_access(x_inference_token)
     _ensure_model()
     if not file.filename:
         raise HTTPException(status_code=422, detail="Dosya adi bos olamaz.")
@@ -249,7 +268,11 @@ async def predict_batch_upload(
     tags=["Kullanıcı — Görselleştirme"],
     summary="Duygu dağılımı grafiği (PNG)",
 )
-def visualize_distribution_png(body: VisualizeDistributionRequest) -> Response:
+def visualize_distribution_png(
+    body: VisualizeDistributionRequest,
+    x_inference_token: str | None = Header(default=None),
+) -> Response:
+    _ensure_internal_access(x_inference_token)
     df, title, kw, _src = _dataframe_for_visualize(body)
     try:
         png = render_sentiment_distribution_png(df, topic_title=title, keywords_text=kw)
@@ -264,7 +287,11 @@ def visualize_distribution_png(body: VisualizeDistributionRequest) -> Response:
     tags=["Kullanıcı — Görselleştirme"],
     summary="Duygu dağılımı sayımları (JSON)",
 )
-def visualize_distribution_stats(body: VisualizeDistributionRequest) -> DistributionStatsResponse:
+def visualize_distribution_stats(
+    body: VisualizeDistributionRequest,
+    x_inference_token: str | None = Header(default=None),
+) -> DistributionStatsResponse:
+    _ensure_internal_access(x_inference_token)
     df, title, kw, src = _dataframe_for_visualize(body)
     try:
         counts, total = sentiment_distribution_counts(df)

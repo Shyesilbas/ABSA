@@ -1,5 +1,14 @@
 # Turkish Sentence Sentiment Analysis
 
+## Hybrid Backend (New)
+
+This project now includes an optional hybrid backend mode:
+
+- `backend/` (Python FastAPI): internal inference service for model prediction and visualization
+- `backend-csharp/` (ASP.NET Core): public gateway for API orchestration and optional client auth
+
+Setup steps are documented in `HYBRID_BACKEND_SETUP.md`.
+
 Bu proje, bir Türkçe cümleyi okuyup duygu etiketine çevirir:
 - `Negative` (olumsuz)
 - `Neutral` (nötr)
