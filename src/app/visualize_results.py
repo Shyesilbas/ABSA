@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import io
+import logging
 import os
 
 import matplotlib
@@ -14,10 +17,11 @@ from core.config import (
 )
 
 matplotlib.use("Agg")
+logger = logging.getLogger(__name__)
 
 
 def prepare_batch_results_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """Batch sonuç CSV/API çerçevesini grafik için normalize eder."""
+    """Normalize batch result CSV/API DataFrame for charting."""
     out = df.copy()
     out.columns = out.columns.str.strip()
     if "sentiment" not in out.columns:
@@ -28,11 +32,11 @@ def prepare_batch_results_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def sentiment_distribution_counts(df: pd.DataFrame) -> tuple[dict[str, int], int]:
-    """value_counts sözlüğü ve toplam satır sayısı."""
+    """Return a value_counts dict and total row count."""
     prep = prepare_batch_results_dataframe(df)
     vc = prep["sentiment"].value_counts()
     counts = {str(k): int(v) for k, v in vc.items()}
-    print(f"DEBUG: Calculated counts: {counts}, Total: {len(prep)}")
+    logger.debug("Calculated counts: %s, Total: %d", counts, len(prep))
     return counts, len(prep)
 
 
@@ -42,7 +46,7 @@ def render_sentiment_distribution_png(
     topic_title: str | None = None,
     keywords_text: str | None = None,
 ) -> bytes:
-    """Duygu dağılımı sütun grafiğini PNG baytları olarak üretir."""
+    """Render a sentiment distribution bar chart as PNG bytes."""
     prep = prepare_batch_results_dataframe(df)
     title = topic_title.strip() if topic_title else ""
     kw = keywords_text.strip() if keywords_text else ""
@@ -50,7 +54,7 @@ def render_sentiment_distribution_png(
     colors = {"Negative": "#FF4B4B", "Neutral": "#7D7D7D", "Positive": "#4CAF50"}
     order = ["Negative", "Neutral", "Positive"]
 
-    # Global plt yerine Figure nesnesi kullanarak izolasyon sağlıyoruz
+    # Use Figure object for isolation instead of global plt
     from matplotlib.figure import Figure
     from matplotlib.backends.backend_agg import FigureCanvasAgg
 
@@ -59,12 +63,16 @@ def render_sentiment_distribution_png(
     ax = fig.add_subplot(111)
     
     sns.set_style("whitegrid")
+    active_order = [o for o in order if o in set(prep["sentiment"].unique())]
     sns.countplot(
         x="sentiment",
+        hue="sentiment",
         data=prep,
         palette=colors,
-        order=[o for o in order if o in set(prep["sentiment"].unique())],
-        ax=ax
+        order=active_order,
+        hue_order=active_order,
+        legend=False,
+        ax=ax,
     )
     
     if title:

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { BatchPredictionRow, DistributionStatsResponse } from '../api';
-import { UploadCloud, ListChecks, Loader2, PieChart, BarChart3, Image as ImageIcon, FileText, Download, DownloadCloud, Search, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { UploadCloud, ListChecks, Loader2, PieChart, BarChart3, Image as ImageIcon, FileText, Download, DownloadCloud, Search, ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const PAGE_SIZE = 25;
 import { PieChart as RePie, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { sentimentColor } from './SinglePredictionCard';
 import { cn } from './Header';
@@ -58,6 +60,7 @@ export default function BatchPredictionCard({
   const [resultFilter, setResultFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const hasRows = batchRows && batchRows.length > 0;
 
@@ -135,6 +138,10 @@ export default function BatchPredictionCard({
       return 0;
     });
 
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedRows = filteredRows.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
   const chartData = stats ? Object.entries(stats.counts).map(([name, value]) => ({ name, value })) : [];
   const SENTIMENT_COLORS: Record<string, string> = {
     "Positive": "#10b981", // emerald-500
@@ -156,7 +163,7 @@ export default function BatchPredictionCard({
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors duration-300">
+    <div role="region" aria-label="Batch Prediction" className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors duration-300">
       <div className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/30 px-6 py-4">
         <div className="flex items-center gap-2">
           <ListChecks className="h-5 w-5 text-slate-400" />
@@ -212,6 +219,7 @@ export default function BatchPredictionCard({
                   type="file"
                   accept=".csv,text/csv"
                   className="sr-only"
+                  aria-label="Upload CSV file for batch prediction"
                   onChange={(e) => setBatchFile(e.target.files?.[0] ?? null)}
                 />
               </label>
@@ -242,6 +250,7 @@ export default function BatchPredictionCard({
               value={batchInput}
               onChange={(e) => setBatchInput(e.target.value)}
               placeholder={`One text per line (max ${maxBatch} lines).`}
+              aria-label="Batch text input, one sentence per line"
               className="flex-1 min-h-[120px] w-full resize-none rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 p-3 text-sm text-slate-900 dark:text-slate-200 placeholder:text-slate-500 focus:border-slate-400 dark:focus:border-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400 dark:focus:ring-slate-700 transition-colors"
             />
             <div className="mt-3 flex justify-end">
@@ -407,22 +416,25 @@ export default function BatchPredictionCard({
               <div className="flex flex-wrap items-center gap-3">
                 {/* Search Bar */}
                 <div className="relative">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" aria-hidden="true" />
                   <input
                     type="text"
                     placeholder="Search results..."
+                    aria-label="Search prediction results"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                     className="pl-9 pr-4 py-2 w-full sm:w-64 text-sm rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 focus:border-slate-400 focus:outline-none transition-colors"
                   />
                 </div>
 
                 {/* Sentiment Filter Tabs */}
-                <div className="flex p-1 bg-slate-100 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800 transition-colors">
+                <div role="tablist" aria-label="Filter by sentiment" className="flex p-1 bg-slate-100 dark:bg-slate-950 rounded-lg border border-slate-200 dark:border-slate-800 transition-colors">
                   {["All", "Positive", "Negative", "Neutral"].map((filter) => (
                     <button
                       key={filter}
-                      onClick={() => setResultFilter(filter)}
+                      role="tab"
+                      aria-selected={resultFilter === filter}
+                      onClick={() => { setResultFilter(filter); setCurrentPage(1); }}
                       className={cn(
                         "px-3 py-1.5 text-xs font-medium rounded-md transition-all",
                         resultFilter === filter
@@ -438,7 +450,7 @@ export default function BatchPredictionCard({
             </div>
 
             <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-transparent">
-              <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
+              <table aria-label="Prediction results" className="min-w-full divide-y divide-slate-200 dark:divide-slate-800">
                 <thead className="bg-slate-50 dark:bg-slate-800/50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase text-slate-400">#</th>
@@ -464,9 +476,9 @@ export default function BatchPredictionCard({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
-                  {filteredRows.map((row, i) => (
-                    <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="px-6 py-4 text-sm text-slate-400 dark:text-slate-500">{row.id ?? i}</td>
+                  {paginatedRows.map((row, i) => (
+                    <tr key={`${safePage}-${i}`} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="px-6 py-4 text-sm text-slate-400 dark:text-slate-500">{row.id ?? ((safePage - 1) * PAGE_SIZE + i)}</td>
                       <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
                         {row.text.length > 100 ? `${row.text.slice(0, 100)}…` : row.text}
                       </td>
@@ -484,7 +496,7 @@ export default function BatchPredictionCard({
                       </td>
                     </tr>
                   ))}
-                  {filteredRows.length === 0 && (
+                  {paginatedRows.length === 0 && (
                     <tr>
                       <td colSpan={4} className="px-6 py-12 text-center text-sm text-slate-400 dark:text-slate-500 italic">
                         No results found in this category.
@@ -494,6 +506,60 @@ export default function BatchPredictionCard({
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {filteredRows.length > PAGE_SIZE && (
+              <nav aria-label="Pagination" className="mt-4 flex items-center justify-between">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Showing {((safePage - 1) * PAGE_SIZE) + 1}–{Math.min(safePage * PAGE_SIZE, filteredRows.length)} of {filteredRows.length} results
+                </p>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={safePage <= 1}
+                    aria-label="Previous page"
+                    className="inline-flex items-center justify-center rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-1.5 text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                    let page: number;
+                    if (totalPages <= 7) {
+                      page = i + 1;
+                    } else if (safePage <= 4) {
+                      page = i + 1;
+                    } else if (safePage >= totalPages - 3) {
+                      page = totalPages - 6 + i;
+                    } else {
+                      page = safePage - 3 + i;
+                    }
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        aria-current={safePage === page ? 'page' : undefined}
+                        className={cn(
+                          "min-w-[32px] rounded-md px-2 py-1 text-xs font-medium transition-colors",
+                          safePage === page
+                            ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+                            : "text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-400"
+                        )}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={safePage >= totalPages}
+                    aria-label="Next page"
+                    className="inline-flex items-center justify-center rounded-md border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 p-1.5 text-slate-500 dark:text-slate-400 transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </nav>
+            )}
           </div>
         )}
       </div>

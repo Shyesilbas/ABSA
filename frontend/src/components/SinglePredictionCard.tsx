@@ -30,7 +30,7 @@ export default function SinglePredictionCard({
   singleRes,
 }: SinglePredictionCardProps) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors duration-300">
+    <div role="region" aria-label="Single Prediction" className="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-sm transition-colors duration-300">
       <div className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/30 px-6 py-4">
         <div className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-slate-400" />
@@ -47,6 +47,7 @@ export default function SinglePredictionCard({
           onChange={(e) => setSingleText(e.target.value)}
           placeholder="e.g. The service was excellent and the food was delicious."
           maxLength={8000}
+          aria-label="Enter a Turkish sentence for sentiment analysis"
           className="h-32 w-full resize-none rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950 p-3 text-sm text-slate-900 dark:text-slate-200 placeholder:text-slate-500 focus:border-slate-400 dark:focus:border-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400 dark:focus:ring-slate-700 transition-colors"
         />
         
@@ -63,7 +64,7 @@ export default function SinglePredictionCard({
         </div>
 
         {singleRes && (
-          <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50 p-4">
+          <div role="status" aria-live="polite" className="mt-6 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800/50 p-4">
             <div className="flex items-start justify-between">
               <div>
                 <span className={cn(

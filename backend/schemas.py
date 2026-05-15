@@ -1,4 +1,4 @@
-"""HTTP istek/yanıt şemaları (kullanıcı uçları)."""
+"""HTTP request/response schemas (public endpoints)."""
 from __future__ import annotations
 
 from typing import Annotated, Optional, Union
@@ -67,7 +67,7 @@ class SentimentRow(BaseModel):
 
 
 class VisualizeDistributionRequest(BaseModel):
-    """Tam olarak biri: ham metinler (model gerekir) veya hazır sentiment satırları."""
+    """Exactly one of: raw texts (requires model) or pre-labelled sentiment rows."""
 
     topic_title: Optional[str] = Field(None, max_length=500)
     keywords_subtitle: Optional[str] = Field(None, max_length=500)
@@ -79,15 +79,15 @@ class VisualizeDistributionRequest(BaseModel):
         has_t = bool(self.texts)
         has_r = bool(self.rows)
         if has_t == has_r:
-            raise ValueError("texts veya rows alanlarından tam olarak biri dolu olmalıdır.")
+            raise ValueError("Exactly one of 'texts' or 'rows' must be provided.")
         if has_t and len(self.texts or []) > MAX_VISUALIZE_TEXTS:
-            raise ValueError(f"En fazla {MAX_VISUALIZE_TEXTS} metin gönderilebilir.")
+            raise ValueError(f"At most {MAX_VISUALIZE_TEXTS} texts can be sent.")
         if has_r and len(self.rows or []) > MAX_VISUALIZE_ROWS:
-            raise ValueError(f"En fazla {MAX_VISUALIZE_ROWS} satır gönderilebilir.")
+            raise ValueError(f"At most {MAX_VISUALIZE_ROWS} rows can be sent.")
         if has_t:
             for t in self.texts or []:
                 if len(t) > 8000:
-                    raise ValueError("Her metin en fazla 8000 karakter olabilir.")
+                    raise ValueError("Each text can be at most 8000 characters.")
         return self
 
 

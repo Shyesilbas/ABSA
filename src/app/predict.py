@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from model.inference import load_classifier, predict_sentence_with_meta
 
 

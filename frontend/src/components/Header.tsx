@@ -49,7 +49,7 @@ export default function Header({ health, theme, setTheme, onRefresh }: HeaderPro
   };
 
   return (
-    <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+    <div role="banner" className="mb-8 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Turkish Sentiment Analysis</h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
@@ -63,6 +63,7 @@ export default function Header({ health, theme, setTheme, onRefresh }: HeaderPro
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           className="inline-flex items-center justify-center rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 text-slate-500 dark:text-slate-300 shadow-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 dark:focus:ring-slate-700"
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           title="Toggle Theme"
         >
           {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
@@ -70,6 +71,7 @@ export default function Header({ health, theme, setTheme, onRefresh }: HeaderPro
 
         <button
           onClick={onRefresh}
+          aria-label="Refresh system health status"
           className="inline-flex items-center gap-2 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1.5 text-sm font-medium text-slate-500 dark:text-slate-300 shadow-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-slate-500 dark:focus:ring-slate-700"
         >
           <RefreshCcw className="h-4 w-4" />

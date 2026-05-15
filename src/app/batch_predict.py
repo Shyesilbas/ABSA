@@ -1,33 +1,86 @@
+from __future__ import annotations
+
 import os
 
 import pandas as pd
 
 from core.config import BATCH_RESULTS_PATH, OUTPUTS_DIR, SAMPLE_TEXTS_PATH
 from core.progress import track
-from model.inference import load_classifier, predict_sentence_with_meta
+from model.inference import load_classifier
 
 
 def predict_batch_entries(model, tokenizer, device, entries: list[dict]) -> list[dict]:
-    """API veya programatik batch: her kayıt `text` ve isteğe bağlı `id` içerir."""
-    results: list[dict] = []
+    """API or programmatic batch: each entry contains `text` and optional `id`.
+
+    Uses batched tokenisation + forward passes for efficiency.
+    """
+    import torch
+    import torch.nn.functional as F
+    from core.config import (
+        CLASS_NAMES,
+        CONFIDENCE_FALLBACK_ENABLED,
+        CONFIDENCE_FALLBACK_LABEL,
+        CONFIDENCE_THRESHOLD,
+        MAX_LEN,
+    )
+
+    # Filter valid entries
+    valid: list[tuple[int, str]] = []
+    id_map: list = []
     for i, entry in enumerate(entries):
         text = entry.get("text")
         rid = entry.get("id", i)
         if not isinstance(text, str) or len(text.strip()) < 2:
             continue
-        label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, text)
-        conf = float(meta["confidence"])
-        fallback_applied = bool(meta["fallback_applied"])
-        results.append(
-            {
-                "id": rid,
-                "text": text,
-                "sentiment": label,
-                "raw_sentiment": meta["raw_label"],
-                "fallback_applied": fallback_applied,
-                "confidence": round(conf, 4),
-            }
+        valid.append((i, text.strip()))
+        id_map.append(rid)
+
+    if not valid:
+        return []
+
+    BATCH_SIZE = 32
+    results: list[dict] = []
+
+    for start in range(0, len(valid), BATCH_SIZE):
+        chunk = valid[start : start + BATCH_SIZE]
+        chunk_ids = id_map[start : start + BATCH_SIZE]
+        texts = [t for _, t in chunk]
+
+        enc = tokenizer(
+            texts,
+            max_length=MAX_LEN,
+            padding="max_length",
+            truncation=True,
+            return_tensors="pt",
         )
+        enc = {k: v.to(device) for k, v in enc.items()}
+
+        with torch.no_grad():
+            logits = model(**enc).logits.float()
+            probs = F.softmax(logits, dim=-1)
+            confs, raw_idxs = probs.max(dim=-1)
+
+        for j in range(len(texts)):
+            raw_idx = int(raw_idxs[j].item())
+            conf = float(confs[j].item())
+            final_idx = raw_idx
+
+            if CONFIDENCE_FALLBACK_ENABLED and conf < float(CONFIDENCE_THRESHOLD):
+                if CONFIDENCE_FALLBACK_LABEL in CLASS_NAMES:
+                    final_idx = CLASS_NAMES.index(CONFIDENCE_FALLBACK_LABEL)
+
+            fallback_applied = final_idx != raw_idx
+            results.append(
+                {
+                    "id": chunk_ids[j],
+                    "text": texts[j],
+                    "sentiment": CLASS_NAMES[final_idx],
+                    "raw_sentiment": CLASS_NAMES[raw_idx],
+                    "fallback_applied": fallback_applied,
+                    "confidence": round(conf, 4),
+                }
+            )
+
     return results
 
 
@@ -70,28 +123,19 @@ def process_batch(input_file, output_file):
         return
 
     os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
-    results = []
-    fallback_count = 0
 
-    for _, row in track(df.iterrows(), total=len(df), desc="Batch predict", unit="row"):
+    # Build entries list for the efficient batched pipeline
+    entries = []
+    for idx, row in df.iterrows():
         text = row.get("text")
-        rid = row.get("id", row.name)
-        if not isinstance(text, str) or len(text.strip()) < 2:
-            continue
-        label, probs, meta = predict_sentence_with_meta(model, tokenizer, device, text)
-        conf = float(meta["confidence"])
-        fallback_applied = bool(meta["fallback_applied"])
-        fallback_count += int(fallback_applied)
-        results.append(
-            {
-                "id": rid,
-                "text": text,
-                "sentiment": label,
-                "raw_sentiment": meta["raw_label"],
-                "fallback_applied": fallback_applied,
-                "confidence": round(conf, 4),
-            }
-        )
+        rid = row.get("id", idx)
+        if isinstance(text, str) and len(text.strip()) >= 2:
+            entries.append({"id": rid, "text": text.strip()})
+
+    print(f"Processing {len(entries)} valid entries from {len(df)} rows...")
+    results = predict_batch_entries(model, tokenizer, device, entries)
+
+    fallback_count = sum(1 for r in results if r.get("fallback_applied", False))
 
     pd.DataFrame(results).to_csv(output_file, index=False)
     print(f"Rows written: {len(results)} -> {output_file}")

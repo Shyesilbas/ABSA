@@ -1,0 +1,21 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": [
+    "src",
+    "."
+  ],
+  "include": [
+    "src",
+    "backend"
+  ],
+  "exclude": [
+    "src/_legacy",
+    "frontend",
+    "scratch",
+    "**/__pycache__"
+  ],
+  "reportMissingImports": "warning",
+  "reportMissingModuleSource": "none",
+  "pythonVersion": "3.10"
+}

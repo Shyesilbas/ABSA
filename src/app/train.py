@@ -51,9 +51,12 @@ from data.training_data import build_train_val_frames
 from model.trainer import build_loss_fn, fit
 
 try:
-    from torch.cuda.amp import GradScaler
+    from torch.amp import GradScaler
 except ImportError:
-    GradScaler = None  # type: ignore[misc, assignment]
+    try:
+        from torch.cuda.amp import GradScaler
+    except ImportError:
+        GradScaler = None  # type: ignore[misc, assignment]
 
 
 def set_seed(seed: int) -> None:
@@ -188,7 +191,7 @@ def main():
 
     scaler: Any = None
     if use_amp and cuda_ok and GradScaler is not None:
-        scaler = GradScaler()
+        scaler = GradScaler("cuda")
 
     os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
     best_f1, history = fit(
@@ -210,7 +213,7 @@ def main():
     )
 
     if os.path.isfile(MODEL_PATH):
-        model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+        model.load_state_dict(torch.load(MODEL_PATH, map_location=device, weights_only=True))
 
     _save_experiment_artifact(
         path=EXPERIMENT_ARTIFACT_PATH,

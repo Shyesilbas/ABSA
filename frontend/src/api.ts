@@ -1,4 +1,4 @@
-/** Geliştirmede Vite proxy: /api -> backend. Prod’da VITE_API_BASE_URL kullan. */
+/** In development, Vite proxy: /api -> backend. In production, use VITE_API_BASE_URL. */
 export function apiBase(): string {
   const env = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "");
   if (env) return env;
@@ -6,9 +6,11 @@ export function apiBase(): string {
   return "http://127.0.0.1:8001";
 }
 
-/** C# gateway ClientApiKey ile uyum (boşsa header yok). */
+/** C# gateway ClientApiKey compatibility. Automatically uses dev key in development. */
 function gatewayHeaders(): Record<string, string> {
-  const key = import.meta.env.VITE_GATEWAY_API_KEY?.trim();
+  const key =
+    import.meta.env.VITE_GATEWAY_API_KEY?.trim() ||
+    (import.meta.env.DEV ? "dev-client-key" : "");
   if (!key) return {};
   return { "x-api-key": key };
 }
@@ -20,7 +22,7 @@ async function parseError(res: Response): Promise<string> {
     if (typeof j.detail === "string") return j.detail;
     if (Array.isArray(j.detail)) return JSON.stringify(j.detail);
   } catch {
-    /* yanıt JSON değil */
+    /* response is not JSON */
   }
   return t || res.statusText;
 }

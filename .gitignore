@@ -1,5 +1,7 @@
-models/
-data/
+models/*
+!models/.gitkeep
+data/*
+!data/.gitkeep
 __pycache__/
 *.pyc
 
@@ -13,7 +15,25 @@ env/
 .vscode/
 node_modules/
 ABSA/
-gateway_batch_test.csv
-gateway_test_distribution.png
+
+# Build artifacts
+frontend/dist/
 backend-csharp/bin/
 backend-csharp/obj/
+
+# Logs
+*.log
+.dotnet.log
+.uvicorn.log
+.vite.log
+
+# Environment files
+.env
+frontend/.env
+
+# Test artifacts
+gateway_batch_test.csv
+gateway_test_distribution.png
+
+# Scratch
+scratch/

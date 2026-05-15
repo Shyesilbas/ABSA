@@ -1,1 +1,1 @@
-# HTTP API katmanı; proje kökünden uvicorn ile çalıştırılır.
+# HTTP API layer; run from project root with uvicorn.

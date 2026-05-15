@@ -44,13 +44,27 @@ def load_finetuned_resources(
     if not os.path.isfile(model_path):
         raise FileNotFoundError(f"Model checkpoint not found: {model_path}")
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        model_name,
-        num_labels=len(class_names),
-    )
+    # Suppress noisy HuggingFace Hub/transformers warnings during model loading.
+    # The base model -> classifier architecture mismatch is expected and harmless.
+    import logging as _std_logging
+    import transformers.utils.logging as _tf_logging
 
-    state = torch.load(model_path, map_location=runtime_device)
+    _prev_tf = _tf_logging.get_verbosity()
+    _tf_logging.set_verbosity_error()
+    _hf_logger = _std_logging.getLogger("huggingface_hub")
+    _prev_hf = _hf_logger.level
+    _hf_logger.setLevel(_std_logging.ERROR)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_name,
+            num_labels=len(class_names),
+        )
+    finally:
+        _tf_logging.set_verbosity(_prev_tf)
+        _hf_logger.setLevel(_prev_hf)
+
+    state = torch.load(model_path, map_location=runtime_device, weights_only=True)
     if not isinstance(state, dict):
         raise ValueError(f"Invalid state dict type: {type(state)}")
 

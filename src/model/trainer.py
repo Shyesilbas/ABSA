@@ -11,14 +11,19 @@ from sklearn.metrics import classification_report, f1_score
 from core.progress import loader_total, track
 
 try:
-    from torch.cuda.amp import autocast as _cuda_autocast
+    from torch.amp import autocast as _amp_autocast
+
+    def _amp_ctx(use_amp: bool):
+        return _amp_autocast("cuda") if use_amp else nullcontext()
 except ImportError:
-    def _cuda_autocast():
-        return nullcontext()
+    try:
+        from torch.cuda.amp import autocast as _cuda_autocast
 
-
-def _amp_ctx(use_amp: bool):
-    return _cuda_autocast() if use_amp else nullcontext()
+        def _amp_ctx(use_amp: bool):
+            return _cuda_autocast() if use_amp else nullcontext()
+    except ImportError:
+        def _amp_ctx(use_amp: bool):
+            return nullcontext()
 
 
 def compute_class_weights_from_labels(

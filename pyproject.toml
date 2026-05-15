@@ -1,0 +1,13 @@
+[tool.pyrefly]
+python_version = "3.10"
+search_path = ["src", "."]
+venv_path = ".venv"
+exclude = ["src/_legacy", "frontend", "scratch"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+extraPaths = ["src", "."]
+include = ["src", "backend"]
+exclude = ["src/_legacy", "frontend", "scratch"]
+pythonVersion = "3.10"

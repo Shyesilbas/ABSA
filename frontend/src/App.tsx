@@ -74,12 +74,20 @@ export default function App() {
     }
   }, []);
 
-  // Persistence: Save
+  // Persistence: Save (limit batch rows to avoid exceeding localStorage quota)
   useEffect(() => {
-    if (batchRows) localStorage.setItem("tsa_batchRows", JSON.stringify(batchRows));
-    if (stats) localStorage.setItem("tsa_stats", JSON.stringify(stats));
-    localStorage.setItem("tsa_vizTitle", vizTitle);
-    localStorage.setItem("tsa_vizKw", vizKw);
+    try {
+      // Only persist the first 100 rows to stay within ~5 MB localStorage limit
+      if (batchRows) {
+        const limited = batchRows.slice(0, 100);
+        localStorage.setItem("tsa_batchRows", JSON.stringify(limited));
+      }
+      if (stats) localStorage.setItem("tsa_stats", JSON.stringify(stats));
+      localStorage.setItem("tsa_vizTitle", vizTitle);
+      localStorage.setItem("tsa_vizKw", vizKw);
+    } catch (e) {
+      console.warn("Persistence save error (localStorage may be full):", e);
+    }
   }, [batchRows, stats, vizTitle, vizKw]);
 
   const refreshStatus = useCallback(async () => {
