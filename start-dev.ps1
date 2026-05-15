@@ -55,6 +55,15 @@ Start-Process powershell -ArgumentList @(
     "-NoExit", "-Command",
     "Set-Location '$root'; & '$py' -m uvicorn backend.main:app --host 127.0.0.1 --port 8000"
 ) -WindowStyle Normal
+Write-Host "      Waiting for Python Backend to be ready (Model loading may take ~10 seconds)..." -ForegroundColor DarkGray
+while ($true) {
+    try {
+        $null = Invoke-WebRequest -Uri "http://127.0.0.1:8000/health" -UseBasicParsing -ErrorAction Stop
+        break
+    } catch {
+        Start-Sleep -Seconds 1
+    }
+}
 Write-Host "      OK" -ForegroundColor Green
 
 # -- 2) C# Gateway (optional) ------------------------------------------------
@@ -68,6 +77,18 @@ if ($hasCsharp) {
     Write-Host "      OK" -ForegroundColor Green
 } else {
     Write-Host "[2/3] Skipping C# gateway (dotnet or project not found)." -ForegroundColor Yellow
+}
+
+if ($hasCsharp) {
+    Write-Host "      Waiting for C# Gateway to be ready on port 8001..." -ForegroundColor DarkGray
+    while ($true) {
+        try {
+            $null = Invoke-WebRequest -Uri "http://127.0.0.1:8001/health" -UseBasicParsing -ErrorAction Stop
+            break
+        } catch {
+            Start-Sleep -Milliseconds 500
+        }
+    }
 }
 
 # -- 3) Vite Frontend --------------------------------------------------------

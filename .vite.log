@@ -16,3 +16,6 @@
 8:16:33 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
 8:16:34 PM [vite] ✨ new dependencies optimized: recharts
 8:16:34 PM [vite] ✨ optimized dependencies changed. reloading
+9:31:49 PM [vite] .env.local changed, restarting server...
+9:31:49 PM [vite] page reload index.html
+9:31:49 PM [vite] server restarted.
