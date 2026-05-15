@@ -53,6 +53,34 @@ export default function App() {
   const [pngLoading, setPngLoading] = useState(false);
   const [stats, setStats] = useState<DistributionStatsResponse | null>(null);
   const [chartUrl, setChartUrl] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
+
+  // Persistence: Load
+  useEffect(() => {
+    try {
+      const savedRows = localStorage.getItem("tsa_batchRows");
+      if (savedRows) setBatchRows(JSON.parse(savedRows));
+      
+      const savedStats = localStorage.getItem("tsa_stats");
+      if (savedStats) setStats(JSON.parse(savedStats));
+      
+      const savedTitle = localStorage.getItem("tsa_vizTitle");
+      if (savedTitle) setVizTitle(savedTitle);
+      
+      const savedKw = localStorage.getItem("tsa_vizKw");
+      if (savedKw) setVizKw(savedKw);
+    } catch (e) {
+      console.error("Persistence load error", e);
+    }
+  }, []);
+
+  // Persistence: Save
+  useEffect(() => {
+    if (batchRows) localStorage.setItem("tsa_batchRows", JSON.stringify(batchRows));
+    if (stats) localStorage.setItem("tsa_stats", JSON.stringify(stats));
+    localStorage.setItem("tsa_vizTitle", vizTitle);
+    localStorage.setItem("tsa_vizKw", vizKw);
+  }, [batchRows, stats, vizTitle, vizKw]);
 
   const refreshStatus = useCallback(async () => {
     setErr(null);
@@ -110,8 +138,8 @@ export default function App() {
   };
 
   const onBatchPredict = async () => {
-    const items = linesToItems(batchInput, maxBatch);
-    if (!items.length) {
+    const allItems = linesToItems(batchInput, maxBatch);
+    if (!allItems.length) {
       setErr("Enter at least one line (min 2 characters).");
       return;
     }
@@ -119,18 +147,49 @@ export default function App() {
     setErr(null);
     setBatchRows(null);
     setStats(null);
+    setProgress(0);
     if (chartUrl) URL.revokeObjectURL(chartUrl);
     setChartUrl(null);
+
+    const CHUNK_SIZE = 50;
+    const allPredictions: BatchPredictionRow[] = [];
+
     try {
-      const r = await apiJson<{ predictions: BatchPredictionRow[] }>("/predict/batch", {
-        method: "POST",
-        body: JSON.stringify({ items }),
-      });
-      setBatchRows(r.predictions);
+      for (let i = 0; i < allItems.length; i += CHUNK_SIZE) {
+        const chunk = allItems.slice(i, i + CHUNK_SIZE);
+        const r = await apiJson<{ predictions: BatchPredictionRow[] }>("/predict/batch", {
+          method: "POST",
+          body: JSON.stringify({ items: chunk }),
+        });
+        allPredictions.push(...r.predictions);
+        setProgress(Math.round(((i + chunk.length) / allItems.length) * 100));
+      }
+      
+      setBatchRows(allPredictions);
+
+      // Auto-fetch stats and PNG
+      if (allPredictions.length) {
+        const body = {
+          topic_title: vizTitle.trim() || undefined,
+          keywords_subtitle: vizKw.trim() || undefined,
+          rows: allPredictions.map(x => ({ sentiment: x.sentiment }))
+        };
+
+        void apiJson<DistributionStatsResponse>("/visualize/distribution/stats", {
+          method: "POST",
+          body: JSON.stringify(body),
+        }).then(s => setStats(s)).catch(() => {});
+
+        void apiPostBlob("/visualize/distribution", body).then(blob => {
+          if (chartUrl) URL.revokeObjectURL(chartUrl);
+          setChartUrl(URL.createObjectURL(blob));
+        }).catch(() => {});
+      }
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setBatchLoading(false);
+      setProgress(0);
     }
   };
 
@@ -143,13 +202,17 @@ export default function App() {
     setErr(null);
     setBatchRows(null);
     setStats(null);
+    setProgress(0);
     if (chartUrl) URL.revokeObjectURL(chartUrl);
     setChartUrl(null);
+
     try {
+      // First, get all predictions via standard upload
       const r = await apiUploadBatchCsv(batchFile, {
         topicTitle: vizTitle,
         keywordsSubtitle: vizKw,
       });
+      
       setBatchRows(r.predictions);
       setStats({
         counts: r.counts,
@@ -172,6 +235,7 @@ export default function App() {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setUploadLoading(false);
+      setProgress(0);
     }
   };
 
@@ -312,6 +376,7 @@ export default function App() {
               pngLoading={pngLoading}
               stats={stats}
               chartUrl={chartUrl}
+              progress={progress}
               fetchStats={fetchStats}
               fetchPng={fetchPng}
             />

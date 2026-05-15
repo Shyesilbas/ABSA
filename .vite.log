@@ -1,14 +1,18 @@
 
 > turkish-sentiment-frontend@1.0.0 dev
-> vite --host 127.0.0.1 --port 5173
+> vite
 
 
-  VITE v5.4.21  ready in 976 ms
+  VITE v5.4.21  ready in 1328 ms
 
-  ➜  Local:   http://127.0.0.1:5173/
-10:38:20 PM [vite] http proxy error: /health
-Error: connect ECONNREFUSED 127.0.0.1:8000
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
-10:38:20 PM [vite] http proxy error: /meta
-Error: connect ECONNREFUSED 127.0.0.1:8000
-    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1615:16)
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+7:54:43 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
+8:01:10 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
+8:03:20 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
+8:05:50 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
+8:05:59 PM [vite] hmr update /src/App.tsx, /src/index.css
+8:16:05 PM [vite] hmr update /src/App.tsx, /src/index.css
+8:16:33 PM [vite] hmr update /src/components/BatchPredictionCard.tsx, /src/index.css
+8:16:34 PM [vite] ✨ new dependencies optimized: recharts
+8:16:34 PM [vite] ✨ optimized dependencies changed. reloading

@@ -1,6 +1,324 @@
-INFO:     Started server process [88021]
+INFO:     Started server process [48219]
 INFO:     Waiting for application startup.
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at dbmdz/bert-base-turkish-cased and are newly initialized: ['classifier.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
 INFO:     Application startup complete.
-ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8000): address already in use
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:49311 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49310 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49317 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49318 - "GET /health HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30.csv. Found 30 entries.
+DEBUG: Sample: Bugün hava harika dışarı çıkmak için mükemmel bir 
+DEBUG: Calculated counts: {'Positive': 14, 'Negative': 13, 'Neutral': 3}, Total: 30
+INFO:     127.0.0.1:49321 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49321 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49321 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49332 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49340 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49341 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49346 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49347 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49362 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49363 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49370 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49371 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49379 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49380 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49392 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49393 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49403 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49402 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49402 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49410 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49411 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49420 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49421 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49435 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49436 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49442 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49443 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49451 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49452 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49470 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49471 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49481 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49480 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49480 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49481 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49491 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49492 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49495 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49495 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49510 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49511 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49517 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49518 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49525 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49526 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49537 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49538 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49544 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49543 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49552 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49553 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49572 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49573 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49580 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49581 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49590 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49591 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49591 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49590 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49600 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49601 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49609 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49609 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49616 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49617 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49623 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49624 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49633 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49632 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49642 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49648 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49647 - "GET /meta HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49647 - "POST /visualize/distribution HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49654 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49654 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49659 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49665 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49666 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49679 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49680 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49691 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49692 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49699 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49700 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49700 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49699 - "GET /health HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49707 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49707 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49721 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49722 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49729 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49730 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49734 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49737 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49742 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49743 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49758 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49757 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49767 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49766 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49775 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49776 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49783 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49784 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49784 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49783 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49797 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49797 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49810 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49811 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49819 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49820 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49825 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49826 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49837 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49838 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49843 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49844 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49849 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49850 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49865 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49866 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49874 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49875 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49885 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49886 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49886 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49885 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49896 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49897 - "GET /health HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30_v2.csv. Found 30 entries.
+DEBUG: Sample: Yeni aldığım kulaklık ses kalitesi beklediğimden ç
+DEBUG: Calculated counts: {'Positive': 15, 'Negative': 15}, Total: 30
+INFO:     127.0.0.1:49900 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:49900 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49913 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49914 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49920 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49919 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49930 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49931 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49944 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49945 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49951 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49950 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49957 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49958 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49969 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49970 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49976 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49977 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49980 - "POST /predict HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49980 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49985 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50005 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50006 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50011 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50012 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50018 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50019 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30.csv. Found 30 entries.
+DEBUG: Sample: Bugün hava harika dışarı çıkmak için mükemmel bir 
+DEBUG: Calculated counts: {'Positive': 14, 'Negative': 13, 'Neutral': 3}, Total: 30
+INFO:     127.0.0.1:50024 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:50024 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50024 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50035 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50041 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50040 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50046 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50047 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50060 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50061 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50066 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50067 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50074 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50075 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50092 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50093 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50103 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50104 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50109 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50110 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50124 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50125 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50132 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50133 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50140 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50139 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50149 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50150 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50158 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50159 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50165 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50166 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50195 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50196 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50205 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50206 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50206 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50205 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50218 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50217 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50233 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50234 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50234 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50233 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50247 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50248 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50254 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50255 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50254 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50255 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50255 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50254 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50275 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50276 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50289 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50290 - "GET /meta HTTP/1.1" 200 OK
+DEBUG: Processing batch_predict_sample_30.csv. Found 30 entries.
+DEBUG: Sample: Bugün hava harika dışarı çıkmak için mükemmel bir 
+DEBUG: Calculated counts: {'Positive': 14, 'Negative': 13, 'Neutral': 3}, Total: 30
+INFO:     127.0.0.1:50293 - "POST /predict/batch/upload HTTP/1.1" 200 OK
+/Users/serhat/PycharmProjects/PythonProject/src/app/visualize_results.py:62: FutureWarning: 
+
+Passing `palette` without assigning `hue` is deprecated and will be removed in v0.14.0. Assign the `x` variable to `hue` and set `legend=False` for the same effect.
+
+  sns.countplot(
+INFO:     127.0.0.1:50293 - "POST /visualize/distribution HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50293 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50300 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50306 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50307 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50320 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50321 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50326 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50327 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50332 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50333 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50348 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50349 - "GET /meta HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50355 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50356 - "GET /meta HTTP/1.1" 200 OK

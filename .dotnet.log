@@ -1,0 +1,2101 @@
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://127.0.0.1:8001
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/serhat/PycharmProjects/PythonProject/backend-csharp
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR3065", Request id "0HNLIK7QR3065:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Health(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 26
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware.<Invoke>g__AwaitMatcher|10_0(EndpointRoutingMiddleware middleware, HttpContext httpContext, Task`1 matcherTask)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR3066", Request id "0HNLIK7QR3066:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Meta(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 33
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR3068", Request id "0HNLIK7QR3068:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Meta(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 33
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR3067", Request id "0HNLIK7QR3067:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Health(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 26
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR306A", Request id "0HNLIK7QR306A:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Meta(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 33
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+fail: Microsoft.AspNetCore.Server.Kestrel[13]
+      Connection id "0HNLIK7QR3069", Request id "0HNLIK7QR3069:00000001": An unhandled exception was thrown by the application.
+      System.Net.Http.HttpRequestException: Connection refused (127.0.0.1:8000)
+       ---> System.Net.Sockets.SocketException (61): Connection refused
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+         at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+         at System.Net.Sockets.Socket.<ConnectAsync>g__WaitForConnectWithCancellation|285_0(AwaitableSocketAsyncEventArgs saea, ValueTask connectTask, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         --- End of inner exception stack trace ---
+         at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.AddHttp11ConnectionAsync(QueueItem queueItem)
+         at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+         at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+         at System.Net.Http.DiagnosticsHandler.SendAsyncCore(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.<SendCoreAsync>g__Core|5_0(HttpRequestMessage request, Boolean useAsync, CancellationToken cancellationToken)
+         at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+         at BackendGateway.Services.PythonInferenceClient.GetAsync(String path, CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Services/PythonInferenceClient.cs:line 22
+         at BackendGateway.Controllers.GatewayController.Health(CancellationToken ct) in /Users/serhat/PycharmProjects/PythonProject/backend-csharp/Controllers/GatewayController.cs:line 26
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+         at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 32.7348ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 32.7431ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 44.6142ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 44.5826ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8446ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.0102ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.3825ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.4935ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5170.041ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5170.2323ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 484.6007ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 484.7177ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0351ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2087ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1883ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3856ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3337ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5288ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.624ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8163ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2893ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.394ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6683ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9202ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.214ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3797ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7494ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8966ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4909ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6316ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7092ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8837ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.066ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.1446ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.3207ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.4008ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7443ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0103ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0848ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1728ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2048ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3215ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.727ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8256ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 9.1515ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 9.2471ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7676ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9399ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.3215ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.4364ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2061ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3291ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7424ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8629ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7363ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.848ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9155ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0035ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7106ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8396ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7459ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8496ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4227ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5732ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8285ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.1246ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3298ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4053ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.711ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.7729ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.9671ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.0997ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 6.0191ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 6.0878ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6846ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.7876ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.3826ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.9053ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.1002ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.2037ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.5831ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.6613ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4685.2426ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4685.3837ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 272.6427ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 272.7206ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0071ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1414ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0936ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2032ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 9.6681ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 9.6477ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 9.7319ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 9.7187ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1081ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2412ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1997ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2394ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.6082ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6821ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7061ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.7662ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7955ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8983ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.9001ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.989ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7841ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9085ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.986ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0389ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1165ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1956ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.6025ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.716ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8245ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9061ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5945ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6727ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4295ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5158ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.883ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9278ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 7.3054ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 7.4935ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 9.7553ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 9.8356ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8798ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9431ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2199ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2682ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4659.2136ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4659.281ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 275.9474ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 276.02ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7249ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.7909ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.856ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9063ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.13ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1941ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.6899ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8487ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.873ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.966ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5382ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6724ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4637.6469ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4637.7356ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4325.2029ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4325.247ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4325.6644ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4325.7246ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 284.1584ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 284.2178ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 268.8425ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 268.8984ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.3831ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.4351ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8046ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8782ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.4453ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.5013ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9411ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0003ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2216ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.2652ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6128ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.6579ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0789ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1458ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3543ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.391ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.5958ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.6943ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.0615ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.1522ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.5911ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.7297ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.1283ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.3476ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4626.4967ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4626.5599ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 268.6189ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 268.6966ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2214ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.266ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5207ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6079ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8797ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9512ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.3862ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.5129ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4682.6057ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4682.6978ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 323.024ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 323.0766ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.805ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8898ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.3268ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.4345ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.0907ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.175ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.4536ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.5033ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 82.4226ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 82.5038ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 82.3481ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 82.3974ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5736ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6461ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.6702ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.971ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0032ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0938ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.035ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0772ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.05ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1263ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.1628ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.2707ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4604.751ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4604.8085ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 274.225ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 274.2813ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0293ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1396ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5316ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.604ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5866ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.6572ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9806ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0297ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0518ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2131ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5194ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5661ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.07ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1618ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0541ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1322ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8951ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0353ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3358ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4599ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.431ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.516ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8962ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9465ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8763ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9578ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0741ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1269ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 32.4946ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 32.6313ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 30.208ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 42.3284ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5362ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.6546ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0058ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0892ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.2613ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.3199ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.4767ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.5543ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0608ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1054ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2706ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3281ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4702.7644ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4702.8524ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 316.0728ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 316.1284ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.59ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.643ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.964ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.025ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8862ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9262ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2993ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3649ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0632ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1304ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1426ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2302ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5496ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5987ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.9318ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.006ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8953ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9732ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2217ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2864ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9907ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0575ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.379ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4782ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1914ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2393ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.6198ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.7252ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7533ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8129ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0268ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0581ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 271.7053ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 271.7948ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.2154ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.2927ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.5153ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.6124ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3241ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4805ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7228ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8311ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.209ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2814ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1712ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.2274ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.143ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.2215ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.9175ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.9958ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4662.6202ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4662.6986ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 363.249ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 363.305ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6637ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9415ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0962ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4026ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2223ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.2953ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5148ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.5444ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 9.869ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 9.9348ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 6.7126ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 8.9704ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4525ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5564ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8147ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8541ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7327ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8371ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7787ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8496ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8798ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9609ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9025ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9786ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7414ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.83ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8192ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1643ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5923ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.6603ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8957ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.966ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2217ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.3501ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.7864ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.8229ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.9781ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.0334ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.3772ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.4164ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.242ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.315ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1003ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1464ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.7658ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.372ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.5699ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.6547ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.953ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.0039ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.3682ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4853ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8148ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8756ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.1585ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.2298ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.9384ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.053ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2907ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.4373ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 7.8311ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 8.0016ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 10.5335ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 10.8012ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 20.7681ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 20.8353ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 20.8983ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 20.9178ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 10.7862ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 10.8643ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 10.0831ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 10.1744ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 7.275ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 7.3578ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 7.3603ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 7.4189ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4359ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.503ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4971ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5247ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2358ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.3042ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6814ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.7525ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.9654ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.0107ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.178ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.2226ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.8636ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.9382ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4991ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5863ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.443ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.5109ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.3351ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.3821ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.0313ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.1204ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.1204ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1814ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.097ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.1741ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5032ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5756ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.4667ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.5114ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6629ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.7106ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/predict/batch/upload
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4864.6041ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4864.66ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request POST http://127.0.0.1:8000/visualize/distribution
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 387.6824ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 387.7663ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.2189ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.298ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.6377ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.7143ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.2612ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.3527ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8768ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.9292ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.8903ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.9793ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 6.6685ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 6.7244ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.0867ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.6077ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.8314ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8846ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 2.7107ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 2.7766ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 3.1489ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 3.1966ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.4021ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.5204ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.7771ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.8816ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/meta
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[100]
+      Start processing HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[100]
+      Sending HTTP request GET http://127.0.0.1:8000/health
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 4.5634ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 4.638ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.ClientHandler[101]
+      Received HTTP response headers after 5.2695ms - 200
+info: System.Net.Http.HttpClient.PythonInferenceClient.LogicalHandler[101]
+      End processing HTTP request after 5.34ms - 200
