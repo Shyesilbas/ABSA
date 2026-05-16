@@ -55,21 +55,21 @@ public sealed class GatewayController : ControllerBase
     }
 
     [HttpPost("predict/batch/upload")]
+    [Consumes("multipart/form-data")]
     [RequestFormLimits(MultipartBodyLengthLimit = 1048576)]
-    public async Task<IActionResult> PredictBatchUpload(
-        [FromForm] IFormFile file,
-        [FromForm(Name = "topic_title")] string? topicTitle,
-        [FromForm(Name = "keywords_subtitle")] string? keywordsSubtitle,
-        CancellationToken ct)
+    public async Task<IActionResult> PredictBatchUpload([FromForm] FileUploadRequest request, CancellationToken ct)
     {
         var authError = RequireClientApiKey();
         if (authError is not null) return authError;
 
+        if (request.File == null || request.File.Length == 0)
+            return BadRequest(new { detail = "Dosya yüklenemedi." });
+
         var upstream = await _inferenceClient.PostMultipartAsync(
             "/predict/batch/upload",
-            file,
-            topicTitle,
-            keywordsSubtitle,
+            request.File,
+            request.TopicTitle,
+            request.KeywordsSubtitle,
             ct);
         return await ToActionResult(upstream, ct);
     }

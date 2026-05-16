@@ -25,13 +25,10 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowAll");
 app.MapControllers();
 
-app.Run("http://127.0.0.1:8001");
+app.Run("http://0.0.0.0:8001");
